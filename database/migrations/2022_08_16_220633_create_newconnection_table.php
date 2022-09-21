@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string("number");
             $table->string("citizenship_number");
             $table->string("house_number");
+            $table->string('latitude');
+            $table->string('longitude');
             $table->string("status")->default('pending');
             $table->timestamps();
         }); 

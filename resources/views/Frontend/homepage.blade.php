@@ -34,7 +34,7 @@ $user = auth()->user();
 </head>
 
 <body>
-  <div style="max-width:100%">
+ 
   
     <section id="top" style="max-width: 100%" class=" slider_section position-relative">
       <div id="carouselExampleControls" class="carousel slide " data-ride="carousel">
@@ -70,7 +70,7 @@ $user = auth()->user();
       </div> 
     </section>
 
-  </div>
+  
 
   <!-- nav section -->
 
@@ -108,6 +108,7 @@ $user = auth()->user();
                 
                 <div id="#navItemGame" class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a id="#navItemGame" class="dropdown-item" href="/myrequests">My Requests</a>
+                    <a id="#navItemGame" class="dropdown-item" href="/maintainance">Maintainance</a>
                     <a id="#navItemGame" class="dropdown-item" href="/user">Profile</a>
                     <a id="#navItemGame" class="dropdown-item" href="/logout">Logout</a>
                   </div>
@@ -163,10 +164,16 @@ $user = auth()->user();
       <div class="box">
         <div class="detail-box">
           <h2>
-          WELCOME TO TAP WATER SERVICES
+          WELCOME TO PANIDHARA
           </h2>
           <p>
-          Kathmandu Upatyaka Khanepani Limited (KUKL) is a public company registered under the Nepal Government’s Company Act 2063 and operates under the Public Private Partnership (PPP) modality. According to KUKL’s Articles of Association, the company has the objective to undertake and manage the water supply and sanitation system of the Kathmandu Valley previously operated by NWSC and to provide a quantitative, qualitative and reliable service to its customers at an affordable price. It is responsible for the operation & management of water and wastewater services in the Valley. It operates the water supply and wastewater services under a License and Lease Agreement with the Kathmandu Valley Water Supply Management Board (KVWSMB) for 30 years. It is responsible for the maintenance of all assets received on lease from KVWSMB. It will also take over the responsibility for infrastructure built by the Melamchi Water Supply Project.The shareholders of the company, with relative initial shareholdings, are: the Government of Nepal (24%), Municipalities in the Valley (40%), Private Sector Organizations (12%) [ Nepal Chamber of Commerce- 7.2%, Federation of Nepal Chamber of Commerce & Industry – 2.4%,  Lalitpur Chamber of Commerce – 1.2%,  Bhaktapur Chamber of Commerce -1.2%], and an employee trust  paid by the government (4%).
+          Panidhara is a public company registered under the Nepal Government’s Company Act 2063 and operates under the Public Private Partnership (PPP) modality. According to panidhara’s Articles of Association,
+           the company has the objective to undertake and manage the water supply and sanitation system of the Kathmandu Valley previously operated by NWSC and to provide a quantitative, qualitative and
+            reliable service to its customers at an affordable price. It is responsible for the operation & management of water and wastewater services in the Valley. It operates the water supply and wastewater services under
+             a License and Lease Agreement with the Kathmandu Valley Water Supply Management Board (KVWSMB) for 30 years. It is responsible for the maintenance of all assets received on lease from KVWSMB.
+              It will also take over the responsibility for infrastructure built by the Melamchi Water Supply Project.The shareholders of the company, with relative initial shareholdings, are: the Government of Nepal (24%),
+               Municipalities in the Valley (40%), Private Sector Organizations (12%) [ Nepal Chamber of Commerce- 7.2%, Federation of Nepal Chamber of Commerce & Industry – 2.4%,  Lalitpur Chamber of Commerce – 1.2%,  
+               Bhaktapur Chamber of Commerce -1.2%], and an employee trust  paid by the government (4%).
           </p>
         </div>
         <div class="container-fluid">
@@ -220,11 +227,11 @@ $user = auth()->user();
         <br><br>
 
         *Note*  Only KYC verified users will be able to proceed further.
-              If u are not verified click the button below.
+            It Seems You Are Not Verified.
 
               <div class="btn-box">
           <a>
-            Get Verified Here
+            Complete Your Profile To Get Verified
           </a>
         </div>
 
@@ -251,7 +258,7 @@ $user = auth()->user();
               If u are not verified click the button below.
 
               <div class="btn-box">
-          <a>
+          <a href="/user">
             Get Verified Here
           </a>
         </div>
@@ -328,7 +335,7 @@ $user = auth()->user();
               </div>
               <div class="detail-box">
                 <h5>
-                 Name
+                 Person Name
                 </h5>
                 <p>
                   <img src="images/left-quote.png" alt="">
@@ -346,21 +353,22 @@ $user = auth()->user();
           </div>
         
           <div class="carousel-item">
+            @foreach($testimony as $item)
             <div class="client_container layout_padding-top">
               <div class="img-box">
-       
+                <img src="{{asset("/images/testimony/".$item["image"])}}" alt="">
               </div>
               <div class="detail-box">
                 <h5>
-             
+                  {{$item->name}}
                 </h5>
                 <p>
                   <img src="images/left-quote.png" alt="">
                   <span>
-                 
+                    {{$item->subject}}
                   </span>
                   <img src="images/right-quote.png" alt=""> <br>
-               
+                  {{$item->desc}}
                 </p>
                 
               </div>
@@ -368,7 +376,7 @@ $user = auth()->user();
             </div>
             
           </div>
-     
+     @endforeach
         </div> 
         <a class="carousel-control-prev" href="#carouselExample2Controls" role="button" data-slide="prev">
           <span class="sr-only">Previous</span>
@@ -445,7 +453,7 @@ $user = auth()->user();
     <div class="container">
       <div class="info_logo">
         <h2>
-          HamroTanker
+          PANIDHARA
         </h2>
       </div>
       <div class="info_contact">
@@ -470,7 +478,7 @@ $user = auth()->user();
             <a href="mailto:aashish@myktm.ml">
               <img src="images/mail.png" alt="">
               <span>
-               aashish@myktm.ml
+               support@panidhara.com
               </span>
             </a>
           </div>
@@ -531,7 +539,7 @@ $user = auth()->user();
   <script type="text/javascript" src="js/uijs/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/uijs/bootstrap.js"></script>
   <script type="text/javascript" src="js/uijs/custom.js"></script>
-
+ 
 </body>
 
 </html>

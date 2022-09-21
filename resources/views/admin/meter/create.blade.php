@@ -26,6 +26,12 @@
         <div class="form-group">
         
           <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Enter Description Here" name="user_name" hidden>
+          <input type="text" class="form-control  @error('name') is-invalid @enderror" id="exampleInputPassword1" placeholder="Enter Name Here" name="name" required>
+          @error('name')
+          <span class="invalid-feedback" role="alert">
+              <strong>{{ $message }}</strong>
+          </span>
+      @enderror
         </div>
         <div class="form-group">
         

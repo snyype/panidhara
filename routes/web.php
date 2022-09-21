@@ -7,6 +7,8 @@ use App\Http\Controllers\Usercontroller;
 use App\Http\Controllers\Metercontroller;
 use App\Http\Controllers\Carouselcontroller;
 use App\Http\Controllers\newconnectioncontroller;
+use App\Http\Controllers\TestimonyController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,11 +33,17 @@ Route::namespace('App\Http\Controllers')->group(function ()
     Route::post('/update-profile/{id}','HomeController@Update');
     Route::get('/proceed','newconnectionController@RequestConnection');
     Route::get('/request-new-connection','FrontendController@newConnection');
-    Route::get('/request-now','newconnectioncontroller@reqNewConnection');
+    Route::get('/request-now/{id}','newconnectioncontroller@reqNewConnection');
     Route::get('/myrequests','FrontendController@myRequests');
     Route::get('/request-connection','FrontendController@CheckStatus');
     Route::get('/request-a-new-meter','MeterController@Meters');
     Route::post('/submit-form','newconnectionController@store');
+    Route::get('/purchase-meter/{id}','MeterController@purchasemeter');
+    Route::get('/maintainance','MeterController@maintanance');
+    Route::post('/submitmaintainance','MeterController@storemaintainance');
+    Route::post('/khalti/payment/verify',[PaymentController::class,'verifyPayment'])->name('khalti.verifyPayment');
+    Route::post('/khalti/payment/store',[PaymentController::class,'storePayment'])->name('khalti.storePayment');
+    Route::get('/request-now/thankyou',[PaymentController::class,'thankyou'])->name('khalti.success');
    
      
       
@@ -84,6 +92,43 @@ Route::group(['prefix'=>'admin','middleware'=>'admin'],function (){
         Route::post('/{id}',[TestimonyController::class, 'update']);
 
     });
+
+    
+
+    Route::group(['prefix'=>'connectionrequest','middleware'=>'auth'],function (){
+        Route::get('/',[newconnectionController::class, 'ShowNewConn']);
+        Route::get('/{id}',[newconnectionController::class, 'UpdatConnStatus']);
+
+    });
+
+
+
+    Route::group(['prefix'=>'confirmedconnectionrequest','middleware'=>'auth'],function (){
+        Route::get('/',[newconnectionController::class, 'ShowConfirmedConn']);
+        
+
+    });
+
+    Route::group(['prefix'=>'maintanance','middleware'=>'auth'],function (){
+        Route::get('/',[MeterController::class, 'maintananceview']);
+        
+
+    });
+
+    Route::group(['prefix'=>'viewmap','middleware'=>'auth'],function (){
+        Route::get('/{id}',[MeterController::class, 'ViewMap']);
+        
+
+    });
+
+    Route::group(['prefix'=>'viewconnectionmap','middleware'=>'auth'],function (){
+        Route::get('/{id}',[MeterController::class, 'ViewConnectionMap']);
+        
+
+    });
+
+
+
 });
 
 

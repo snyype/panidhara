@@ -13,12 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('meters', function (Blueprint $table) {
+        Schema::create('maintanance', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')->nullable();
-            $table->string('user_name')->nullable();
-            $table->string('unit')->default(0);
-            $table->string('status')->default('available');
+            $table->string("house_number");
+            $table->string('comment');
+            $table->string('user_id');
+            $table->string('user_name');
+            $table->string('latitude');
+            $table->string('longitude');
+            $table->date('date');
             $table->timestamps();
         });
     }
@@ -30,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meters');
+        Schema::dropIfExists('maintanance');
     }
 };

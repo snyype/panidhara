@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Models\NewConnection;
 use App\Models\Carousel;
+use App\Models\Meter;
 
 
 
@@ -26,19 +27,23 @@ class newconnectionController extends Controller
         
     }
     
-    public function reqNewConnection()
+    public function reqNewConnection($id)
     {
         $user=Auth::id();
         $data = NewConnection::where('user_id',$user)->orwhere('status','=','confirmed')->count();
         $data2 = NewConnection::where('user_id',$user)->orwhere('status','=','confirmed')->get();
-        
+        $data3 = Meter::find($id);
+
         $carousel = Carousel::all();
+        
+        
+
 
         if($data != 0)
         {
 
            
-            return view('Frontend.meterrequestform',compact('data2','carousel'));
+            return view('Frontend.meterrequestform',compact('data2','carousel','data3'));
         }
         else{
             return redirect('/');
@@ -64,6 +69,8 @@ class newconnectionController extends Controller
             'address' => 'required',
             'citizenship_number' => 'required',
             'house_number' => 'required',
+            'lat' => 'required',
+            'lng' => 'required',
             'number' => 'required',
             
             
@@ -77,6 +84,8 @@ class newconnectionController extends Controller
         $data->number = $request->number;
         $data->citizenship_number = $request->citizenship_number;
         $data->house_number = $request->house_number;
+        $data->latitude = $request->lat;
+        $data->longitude = $request->lng;
         $data->save();
 
 
@@ -86,9 +95,40 @@ class newconnectionController extends Controller
             return redirect('/myrequests')->with('status', 'Requested Successfully!');
         }
         else{
-            return redirect('/myrequests')->with('status', 'There was an error!');
+            return redirect('/request-new-connection')->with('status', 'There was an error!');
         }
     
+
+    }
+
+    public function ShowNewConn()
+    {
+       
+        $data = NewConnection::where('status','pending')->get();
+
+        return view('admin.manageconnection.allconnectionreq',compact('data'));
+    }
+
+    public function ShowConfirmedConn()
+    {
+       
+        $data = NewConnection::where('status','confirmed')->get();
+
+        return view('admin.manageconnection.acceptedreq',compact('data'));
+    }
+
+    public function UpdatConnStatus($id)
+    {
+
+        $data = NewConnection::find($id);
+        $data->status = 'confirmed';
+
+        $data->save();
+
+        if($data->save())
+        {
+            return redirect('/admin/connectionrequest');
+        }
 
     }
 

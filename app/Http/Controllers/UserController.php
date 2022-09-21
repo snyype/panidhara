@@ -112,6 +112,9 @@ function update(Request $request, $id)
         $data->email = $request->email;
         $data->role =$request->role;
         $data->verified =$request->verified;
+        $data->house_number =$request->house_number;
+        $data->citizenship_number =$request->citizenship_number;
+        $data->number =$request->number;
 
        
        

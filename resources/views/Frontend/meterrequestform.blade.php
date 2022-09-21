@@ -23,14 +23,16 @@ $user = auth()->user();
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
 
   <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}" /> 
 
   <!-- fonts style -->
   <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan|Dosis:400,600,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
   <!-- Custom styles for this template -->
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
   <!-- responsive style -->
-  <link href="css/responsive.css" rel="stylesheet" />
+  <link href="{{ asset('css/responsive.css') }}" rel="stylesheet" /> 
+
+  <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
 </head>
 
 <body>
@@ -165,7 +167,7 @@ $user = auth()->user();
       <div class="box">
         <div class="detail-box">
           <h2>
-          FILL THE FORM BELOW TO PROCEED FURTHER
+          PURCHASE A METER SERVICE
           </h2>
           <p>
           </p>
@@ -184,7 +186,89 @@ $user = auth()->user();
           </a>
         </div>
         </div> -->
+       
 
+        <div class="card text-center">
+          <div class="card-header">
+            METER INFO
+          </div>
+          <div class="card-header">
+            Rs.{{$data3->price}}
+          </div>
+
+
+          <div class="card-header">
+            Rs.{{$data3->created_at}}
+          </div>
+         
+          <div class="card-header">
+            <button style="background: rgb(92,45,145);color:white;border-color:rgb(92,45,145); border-radius:3px;height:40px" id="payment-button">Pay with Khalti</button>
+          {{-- <a href="/purchase-meter/{{$data3->id}}"><button class="btn btn-success">Pay with esewa</button></a> --}}
+          </div>
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+          <script>
+            var config = {
+                // replace the publicKey with yours
+                "publicKey": "{{ config('app.khalti_public_key') }}",
+                "productIdentity": "{{$data3->id}}",
+                "productName": "{{$data3->name}}",
+                "productUrl": "http://127.0.0.1:8000/request-now/{{$data3->id}}",
+                "paymentPreference": [
+                    "KHALTI",
+                    "EBANKING",
+                    "MOBILE_BANKING",
+                    "CONNECT_IPS",
+                    "SCT",
+                    ],
+                "eventHandler": {
+                
+                    onSuccess (payload) {
+                        // hit merchant api for initiating verfication
+                        $.ajax({
+                            type : 'POST',
+                            url : "{{ route('khalti.verifyPayment') }}",
+                            data: {
+                                token : payload.token,
+                                amount : payload.amount,
+                                "_token" : "{{ csrf_token() }}"
+                            },
+
+                            success : function(res){
+                            $.ajax({
+                            type : 'POST',
+                            url : "{{ route('khalti.storePayment') }}",
+                            data: {
+                                response : res,
+                                "_token" : "{{ csrf_token() }}"
+                            },
+                            success: function(res){
+                              console.log('payment successful')
+                                    },
+                              });
+                                alert('Payment Successful');
+                                console.log(res)
+                               
+                            }
+                        });
+                        console.log(payload);
+                    },
+                    onError (error) {
+                        console.log(error);
+                    },
+                    onClose () {
+                        console.log('widget is closing');
+                    }
+                }
+            };
+    
+            var checkout = new KhaltiCheckout(config);
+            var btn = document.getElementById("payment-button");
+            btn.onclick = function () {
+                // minimum transaction amount must be 10, i.e 1000 in paisa.
+                checkout.show({amount: 1000});
+            }
+        </script>
+          
             </div>
         </div>
       </div>
@@ -196,87 +280,13 @@ $user = auth()->user();
 
   <!-- Form section -->
   
- <!-- Form section -->
- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-<div class="content">
-<div class="container">
-    	<div class="row">
-	
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb30 text-center">
-                        <!-- <h2>FILL THIS FORM TO REQUEST A NEW CONNECTION</h2><BR> -->
-                        </div>
-                        </div>
-	<div class="row">
-	
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb30">
-                        <div class="tour-booking-form">
-                            <form action="/submit-form" method="POST">
-                              @csrf
-                                <div class="row">
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
-                                        <h4 class="tour-form-title">ALL FIELDS ARE MANDATORY FOR METER REQUEST</h4><BR>
-                                  
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt30">
-                                        <!-- <h4 class="tour-form-title">Your Details</h4> -->
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="name">Name</label>
-                                            <input type="text" name="name" placeholder="First and Last Name" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                           
-                                            <input type="text" name="user_name" value="{{$user->name}}" placeholder="First and Last Name" class="form-control" required hidden>
-                                            <input type="text" name="user_id" value="{{$user->id}}" placeholder="First and Last Name" class="form-control" required hidden>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="phone"> Phone</label>
-                                            <input  type="number" name="number" placeholder="+9779XXXXXXXXX" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="citizenship no"> Citizenship No.</label>
-                                            <input  type="number" name="citizenship_number" placeholder="XXXXXXXX" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="citizenship no"> House No.</label>
-                                            <input  type="number"  name="house_number" placeholder="XXXXXX" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            <label class="control-label" for="city">Address</label>
-                                            <input  type="text"  name="address" placeholder="Enter Address" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                     
-                                    </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                        <button type="submit" class="btn btn-primary">send Enquiry</button>
-                                    </div>
-                                </div>
-                                </form>
-                        </div>
-                        
-                    </div>
-	</div>
-		<div class="row">
-             </div>
-</div><br><br><br><br>
-</div>
+  
+
+
+
+ <!-- Form section -->
+ 
 
   
   

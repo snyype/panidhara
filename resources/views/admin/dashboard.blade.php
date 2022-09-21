@@ -55,7 +55,7 @@
                         <!-- Logo icon -->
                         <b class="logo-icon">
                             <!-- Dark Logo icon -->
-                            <img style="width: 100%; height:75px" src="{{ URL::asset('images/tanker/logo.png')}}" alt="HamroTanker" />
+                            <img style="width: 100%; height:75px" src="{{ URL::asset('images/logo/dashboardlogo.jpg')}}" alt="HamroTanker" />
                         </b>
                     </a>
                     <!-- ============================================================== -->
@@ -124,13 +124,7 @@
                                 <span class="hide-menu">Users</span>
                             </a>
                         </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/profile"
-                                aria-expanded="false">
-                                <i class="fa fa-user" aria-hidden="true"></i>
-                                <span class="hide-menu">Profile</span>
-                            </a>
-                        </li>
+                       
                       
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/carousel"
@@ -149,17 +143,24 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/orders"
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/connectionrequest"
                                 aria-expanded="false">
                                 <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                <span class="hide-menu">Active Orders = <span></span> </span>
+                                <span class="hide-menu">Active Connection Requests<span></span> </span>
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/orders/ordersarchive"
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/confirmedconnectionrequest"
+                                aria-expanded="false">
+                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                <span class="hide-menu">Confirmed Connection Requests<span></span> </span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/maintanance"
                                 aria-expanded="false">
                                 <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
-                                <span class="hide-menu">Closed Orders</span>
+                                <span class="hide-menu">Maintanance Requests</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -213,7 +214,7 @@
             <!-- ============================================================== -->
             <!-- footer -->
             <!-- ============================================================== -->
-            <footer class="footer text-center"> 2021 © HamroTanker
+            <footer class="footer text-center"> 2021 © Panidhara
             </footer>
             <!-- ============================================================== -->
             <!-- End footer -->

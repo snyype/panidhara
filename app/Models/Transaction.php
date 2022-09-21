@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Testimony extends Model
+class Transaction extends Model
 {
     use HasFactory;
-    public $table="testimony";
-    protected $fillable = ['name','subject','desc','image'];
+    public $table="transaction";
 }

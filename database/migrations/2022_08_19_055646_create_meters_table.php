@@ -13,8 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('testimony', function (Blueprint $table) {
+        Schema::create('meters', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->string('user_id')->nullable();
+            $table->string('user_name')->nullable();
+            $table->string('unit')->default(0);
+            $table->string('price')->default(1500);
+            $table->string('status')->default('available');
             $table->timestamps();
         });
     }
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('testimony');
+        Schema::dropIfExists('meters');
     }
 };

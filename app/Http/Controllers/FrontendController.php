@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Models\NewConnection;
 use App\Models\Carousel;
+use App\Models\Testimony;
 
 class FrontendController extends Controller
 {
@@ -13,8 +14,9 @@ class FrontendController extends Controller
     {
         $user_id = Auth::id();
         $carousel = Carousel::all();
+        $testimony = Testimony::where('status','=','confirmed')->get();
         $myreqcount = NewConnection::where('user_id',$user_id)->count();
-        return view('Frontend.homepage',compact('myreqcount','carousel'));
+        return view('Frontend.homepage',compact('myreqcount','carousel','testimony'));
     }
 
     public function newConnection()
@@ -23,7 +25,7 @@ class FrontendController extends Controller
         $carousel = Carousel::all();
         $data2 = NewConnection::where('user_id',$user)->orwhere('status','=','confirmed')->get();
 
-        return view('Frontend.newconnection');
+        return view('Frontend.newconnection',compact('data2','carousel'));
     }
 
        
@@ -39,11 +41,22 @@ class FrontendController extends Controller
     {
         $user = Auth::id();
         $carousel = Carousel::all();
-        $myrequests = NewConnection::where('user_id', $user)->take(1)->get();
+        $myrequests = NewConnection::where('user_id', $user)->get();
+
+        if($myrequests)
+        {
+           
+            return view('Frontend.myrequests',compact('myrequests','carousel'));
+        }
+        else{
+            $myrequests = "";
+           
+        }
+        
        
     
 
-        return view('Frontend.myrequests',compact('myrequests','carousel'));
+       
     }
 
     public function dashboard()
@@ -63,4 +76,16 @@ class FrontendController extends Controller
         return view('admin.dashboard');
        
     }
+    public function thnakyou()
+    {
+        
+
+    
+        
+        return view('thankyou');
+       
+    }
+
+
+   
 }

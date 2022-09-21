@@ -47,6 +47,34 @@
           <input type="email" class="form-control" id="exampleInputPassword1"  name="email" value="{{$data->email}}">
         </div>
         <div class="form-group">
+          <label for="exampleInputPassword1">House Number</label>
+          <input type="number" class="form-control" id="exampleInputPassword1"  name="house_number" value="{{$data->house_number}}">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Citizenship Number</label>
+          <input type="number" class="form-control" id="exampleInputPassword1"  name="citizenship_number" value="{{$data->citizenship_number}}">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Number</label>
+          <input type="number" class="form-control" id="exampleInputPassword1"  name="number" value="{{$data->number}}">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Current Image of {{$data->name}} :<br>@if($data['image']=='image.png')  <p> Sorry no image found.</p> @else <span><img style='width: 200px;height:130px' src='{{asset("/images/users/".$data["gallery"])}}'/></span>@endif</label>
+          
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Current Image of Citiznship Front :<br>@if($data['image']=='image.png')  <p> Sorry no image found.</p> @else <span><img style='width: 200px;height:130px' src='{{asset("/images/users/".$data["gallery2"])}}'/></span>@endif</label>
+          
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Current Image of Citizenship Back :<br>@if($data['image']=='image.png')  <p> Sorry no image found.</p> @else <span><img style='width: 200px;height:130px' src='{{asset("/images/users/".$data["gallery3"])}}'/></span>@endif</label>
+          
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Email</label>
+          <input type="email" class="form-control" id="exampleInputPassword1"  name="email" value="{{$data->email}}">
+        </div>
+        <div class="form-group">
             <label for="exampleInputPassword1">Role</label>
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="role" id="flexRadioDefault1" <?php if($data['role']=="2") {echo "checked";}?> value="2"  >

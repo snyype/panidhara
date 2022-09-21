@@ -210,22 +210,30 @@ $user = auth()->user();
                         </div>
                         </div>
 	<div class="row">
-	
+    
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb30">
                         <div class="tour-booking-form">
+                          @if (session('status'))
+                          <div class="alert alert-danger">
+                              {{ session('status') }}
+                          </div>
+                          @endif
                             <form action="/submit-form" method="POST">
                               @csrf
                                 <div class="row">
+                                 
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
                                         <h4 class="tour-form-title">ALL FIELDS ARE MANDATORY</h4><BR>
                                   
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt30">
                                         <!-- <h4 class="tour-form-title">Your Details</h4> -->
                                     </div>
+                                    <input type="text" style="width:350px" class="form-control" placeholder="Select on the map below" name="lat" id="lat" required hidden><br>
+                                    <input type="text" style="width:350px" class="form-control" placeholder="Select on the map below" name="lng" id="lng" required hidden> 
                                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                                         <div class="form-group">
                                             <label class="control-label" for="name">Name</label>
-                                            <input type="text" name="name" placeholder="First and Last Name" class="form-control" required>
+                                            <input type="text" style="width:350px" name="name" placeholder="First and Last Name" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -260,7 +268,40 @@ $user = auth()->user();
                                         </div>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                     
+                                      <div id="map" style="height:400px; width: 800px;" class="my-3"></div>
+
+                                      <script>
+                                          let map;
+                                          function initMap() {
+                                              map = new google.maps.Map(document.getElementById("map"), {
+                                                  center: { lat: 27.690174201403295, lng: 85.29114919320999 },
+                                                  zoom: 12,
+                                                 
+                                                  scrollwheel: true,
+                                              });
+                                              const uluru = { lat: 27.690174201403295, lng: 85.29114919320999 };
+                                              let marker = new google.maps.Marker({
+                                                  position: uluru,
+                                                  map: map,
+                                                  draggable: true,
+                                                  required: true
+                                              });
+                                              google.maps.event.addListener(marker,'position_changed',
+                                                  function (){
+                                                      let lat = marker.position.lat()
+                                                      let lng = marker.position.lng()
+                                                      $('#lat').val(lat)
+                                                      $('#lng').val(lng)
+                                                  })
+                                              google.maps.event.addListener(map,'click',
+                                              function (event){
+                                                  pos = event.latLng
+                                                  marker.setPosition(pos)
+                                              })
+                                          }
+                                      </script>
+                                      <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"
+                                              type="text/javascript"></script>
                                     </div>
                                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                                         <button type="submit" class="btn btn-primary">send Enquiry</button>

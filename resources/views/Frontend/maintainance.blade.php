@@ -165,7 +165,7 @@ $user = auth()->user();
       <div class="box">
         <div class="detail-box">
           <h2>
-          AVAILABLE METERS, REQUEST A METER BELOW
+          FILL THE FORM BELOW TO PROCEED FURTHER
           </h2>
           <p>
           </p>
@@ -194,81 +194,113 @@ $user = auth()->user();
   
   <!-- end shop section -->
 
-  <!-- Table section -->
-  <div class="container">
- <table class="table table-hover">
-  <thead>
-   
-    <tr>
-      <th scope="col">Meter No</th>
-      <th scope="col">Assigned User</th>
-      <th scope="col">Status</th>
-      <th scope="col">Action</th>
-    </tr>
-  </thead>
-  <tbody>
-  @foreach($meters as $data)
-  
-    <tr>
-      <th scope="row">{{$data->id}}</th>
-      @if($data['status']=="processing")
-      <td>{{$data->user_name}}</td>
-      @elseif($data['status']=="available")
-      <td>{{$data->user_name}} </td>
-      @elseif($data['status']=="Booked")
-      <td>{{$data->user_name}} </td>
-      <td>{{$data->status}} </td>
-      @endif
-      @if($data['status']=="available")
-      <td style="color:green">{{$data->status}}</td>
-      <td style="color:green"><a style=" color:blue" href="/request-now/{{$data->id}}">Request Now</a></td>
-  
-      @elseif($data['status']=="processing")
-      <td style="color:red">{{$data->status}}</td>
-      <td style="color:green"><a style=" color:red">This meter is currently being requested by other user, <br> will be available if declined</a></td>
-  
-      @endif
-      
-    </tr>
-   
-  
-    
-   @endforeach
-  </tbody>
-</table>
+  <!-- Form section -->
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
 
-<!-- <section class="shop_section layout_padding">
-    <div class="container">
-      <div class="box">
-        <div class="detail-box">
-          <h2>
-         Request A Meter Connection Below
-          </h2>
-          <p>
-          </p>
-        </div>
-        <div class="container-fluid">
-            <div class="row">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+<div class="content">
+<div class="container">
+    	<div class="row">
+	
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb30 text-center">
+                        <!-- <h2>FILL THIS FORM TO REQUEST A NEW CONNECTION</h2><BR> -->
+                        </div>
+                        </div>
+	<div class="row">
+	
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb30">
+                        <div class="tour-booking-form">
+                            <form action="/submitmaintainance" method="POST">
+                              @csrf
+                                <div class="row">
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                                        <h4 class="tour-form-title">ALL FIELDS ARE MANDATORY</h4><BR>
+                                  
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt30">
+                                        <!-- <h4 class="tour-form-title">Your Details</h4> -->
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                            
+                                            <input type="text" name="user_id" value="{{$user->id}}" placeholder="" class="form-control" required hidden>
+                                            <input type="text" class="form-control" placeholder="Select on the map below" name="lat" id="lat"><br>
+                                            <input type="text" class="form-control" placeholder="Select on the map below" name="lng" id="lng"> 
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                                        <div class="form-group">
+                                           
+                                            <input type="text" name="user_name" value="{{$user->name}}" placeholder="First and Last Name" class="form-control" required hidden>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
+                                       
+                                    </div>
+                                    </div>
+                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                     
+                                 
+                                </div>
+                                <div id="map" style="height:400px; width: 800px;" class="my-3"></div>
+
+                                <script>
+                                    let map;
+                                    function initMap() {
+                                        map = new google.maps.Map(document.getElementById("map"), {
+                                            center: { lat: 27.690174201403295, lng: 85.29114919320999 },
+                                            zoom: 12,
+                                           
+                                            scrollwheel: true,
+                                        });
+                                        const uluru = { lat: 27.690174201403295, lng: 85.29114919320999 };
+                                        let marker = new google.maps.Marker({
+                                            position: uluru,
+                                            map: map,
+                                            draggable: true
+                                        });
+                                        google.maps.event.addListener(marker,'position_changed',
+                                            function (){
+                                                let lat = marker.position.lat()
+                                                let lng = marker.position.lng()
+                                                $('#lat').val(lat)
+                                                $('#lng').val(lng)
+                                            })
+                                        google.maps.event.addListener(map,'click',
+                                        function (event){
+                                            pos = event.latLng
+                                            marker.setPosition(pos)
+                                        })
+                                    }
+                                </script>
+                                <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"
+                                        type="text/javascript"></script>
+                            </div>
+                          </div>
+                          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                            <div class="form-group">
+                               
+                               <br>
+                                <input type="number" name="house_number"  placeholder="Enter House Number" class="form-control" required><br><br>
+                                <input  type="textarea" style="height: 150px;" name="comment" placeholder="Complaint" class="form-control" required><br>
+                                <input  type="date"  name="date" placeholder="Date" class="form-control" required>
+                            </div>
+                          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                              <button type="submit" class="btn btn-primary">send Enquiry</button>
+                          </div>
+                                </form>
+                        </div>
+                        
+                    </div>
+	</div>
+		<div class="row">
+             </div>
+</div><br><br><br><br>
+</div>
+
   
-        <div style="margin-bottom: 30px" class="col-md-3">
-        <div class="img-box">
-        
-     
-        </div>
-        
-        </div>
-
-            </div>
-        </div>
-      </div>
-    </div>
-  </section> -->
-
-
-<br><br><br>
- </div>
-  
-                                                      
   
 
   <!-- info section -->

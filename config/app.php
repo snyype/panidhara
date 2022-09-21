@@ -16,6 +16,9 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'khalti_public_key' => env('KHALTI_PUBLIC_KEY'),
+    'khalti_secret_key' => env('KHALTI_SECRET_KEY'),
+
 
     /*
     |--------------------------------------------------------------------------
@@ -29,6 +32,7 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+
 
     /*
     |--------------------------------------------------------------------------

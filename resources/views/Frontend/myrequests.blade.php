@@ -210,7 +210,9 @@ $user = auth()->user();
     </tr>
   </thead>
   <tbody>
+   
   @foreach($myrequests as $data)
+
     <tr>
       <th scope="row">1</th>
       <td>{{$data->name}}</td>
@@ -226,6 +228,7 @@ $user = auth()->user();
   
     </tr>
    @endforeach
+
   </tbody>
 </table>
 
@@ -247,7 +250,15 @@ $user = auth()->user();
         
      
         </div>
-        @if($data['status']=="confirmed")
+      @foreach($myrequests as $data)
+      @if($data->user_id !== $user->id)
+      <div style="margin-left:300px" class="btn-box center">
+        <a style=" width:500px;color:red" onclick="alert('Sorry request has not been confirmed')"> 
+        NO Any Requests Found
+        </a>
+      </div>
+      @elseif($data['status']=="confirmed")
+        
 
         <div style="margin-left:280px" class="btn-box center">
           <a href="/request-a-new-meter" style=" width:500px;color:green">
@@ -264,6 +275,8 @@ $user = auth()->user();
         </div>
 
         @endif
+        
+        @endforeach
         </div>
 
             </div>
