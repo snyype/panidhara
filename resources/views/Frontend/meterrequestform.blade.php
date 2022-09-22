@@ -202,10 +202,12 @@ $user = auth()->user();
           </div>
          
           <div class="card-header">
-            <button style="background: rgb(92,45,145);color:white;border-color:rgb(92,45,145); border-radius:3px;height:40px" id="payment-button">Pay with Khalti</button>
+            
+            <button style="border: 0px" id="payment-button"><img style="width:90px; height:37px;" src="{{ URL::asset('images/logo/khalti-logo.png')}}"></button>
           {{-- <a href="/purchase-meter/{{$data3->id}}"><button class="btn btn-success">Pay with esewa</button></a> --}}
           </div>
           <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+         
           <script>
             var config = {
                 // replace the publicKey with yours
@@ -221,6 +223,7 @@ $user = auth()->user();
                     "SCT",
                     ],
                 "eventHandler": {
+
                 
                     onSuccess (payload) {
                         // hit merchant api for initiating verfication
@@ -236,9 +239,9 @@ $user = auth()->user();
                             success : function(res){
                             $.ajax({
                             type : 'POST',
-                            url : "{{ route('khalti.storePayment') }}",
+                            url : "/khalti/payment/store",
                             data: {
-                                response : res,
+                             "response" : res,
                                 "_token" : "{{ csrf_token() }}"
                             },
                             success: function(res){
@@ -265,7 +268,7 @@ $user = auth()->user();
             var btn = document.getElementById("payment-button");
             btn.onclick = function () {
                 // minimum transaction amount must be 10, i.e 1000 in paisa.
-                checkout.show({amount: 1000});
+                checkout.show({amount: {{$data3->price}}*100});
             }
         </script>
           

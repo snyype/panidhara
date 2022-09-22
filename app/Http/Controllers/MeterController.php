@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Meter;
 use App\Models\Carousel;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\NewConnection;
 use App\Models\Maintanance;
 

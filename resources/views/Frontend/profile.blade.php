@@ -274,26 +274,28 @@ $user = auth()->user();
                       </div>
                       <div class="form-group">
                           
-                          <div class="col-xs-6">
+                          <div class="col-xs-12">
                               <label for="text"><h4>Address</h4></label>
-                              <input type="text" class="form-control" name="address" value="{{$user->address}}">
+                              <input type="text" style="width: 48%" class="form-control" name="address" value="{{$user->address}}">
                           </div>
-                      </div> <br><br><br>
+                      </div>
                       <div class="form-group">
-                          
+                        
                           <div class="col-xs-6">
-                              <label for="password"><h4>Citizenship Front</h4></label>
+                            
                               <label for="password2"><h4>Current Citizenship Front image :</h4></label>
-                            <img width="200px" height="100px" src="{{asset("/images/users/".$user["gallery2"])}}" alt="">
+                            <img width="200px" height="100px" src="{{asset("/images/users/".$user["gallery2"])}}" alt=""><br><br><br>
+                            <label for="password"><h4>Citizenship Front</h4></label>
                               <input type="file" class="form-control" name="gallery2">
                           </div>
                       </div>
                       <div class="form-group">
                           
                           <div class="col-xs-6">
-                            <label for="password2"><h4>Citizenship Back</h4></label>
+                            
                             <label for="password2"><h4>Current Citizenship Back image :</h4></label>
-                            <img width="200px" height="100px" src="{{asset("/images/users/".$user["gallery3"])}}" alt="">
+                            <img width="200px" height="100px" src="{{asset("/images/users/".$user["gallery3"])}}" alt=""><br><br><br>
+                            <label for="password2"><h4>Citizenship Back</h4></label>
                               <input type="file" class="form-control" name="gallery3">
                           </div>
                           

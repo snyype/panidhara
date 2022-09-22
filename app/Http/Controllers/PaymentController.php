@@ -13,7 +13,7 @@ class PaymentController extends Controller
 
         $args = http_build_query(array(
             'token' => $token,
-            'amount'  => 1000
+            'amount'  => 150000,
         ));
 
         $url = "https://khalti.com/api/v2/payment/verify/";
@@ -28,12 +28,21 @@ class PaymentController extends Controller
 
         $headers = ["Authorization: Key $secret_key"];
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        // Response
         $response = curl_exec($ch);
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-    
+        $data1 = json_decode($response,true);
+        $amount = $data1['amount'];
+        $idx = $data1['idx'];
+        $productid = $data1['product_identity'];
+        $token = $data1['token'];
+        $metername = "Khaanepani Sewa";
+       
+
+        $store = Transaction::insert(
+            ['transaction_id' =>$idx, 'amount' =>$amount,'meter_id'=>$productid,'token'=>$token,'meter_name'=>$metername]
+        );
+        
     return $response;
 
 //        
@@ -42,10 +51,16 @@ class PaymentController extends Controller
 
     public function storePayment(Request $request)
     {
-        dd($request);
+
         $response = $request->response;
 
+        $snype = json_decode($response, true);
 
+        var_dump($snype);
+
+        foreach ($snype as $name => $data) {
+            var_dump($name, $data['idx'], $data['amount']); // $name is the Name of Room
+        }
     }
 
 
