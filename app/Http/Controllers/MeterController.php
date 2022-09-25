@@ -13,7 +13,7 @@ use App\Models\Transaction;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TransactionExport;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-
+use Maatwebsite\Excel\Concerns\FromCollection;
 
 class MeterController extends Controller
 {
@@ -273,25 +273,15 @@ class MeterController extends Controller
         return view('admin.transaction.searchtransactions',compact('data'));
     }
 
-    public function headings(): array
-    {
-        //Put Here Header Name That you want in your excel sheet 
-        return [
-            'ID',
-            'Transaction Id',
-            'Meter Id',
-            'Meter Name',
-            'Amount',
-            'Token'
-        ];
-    }
+    
+    
     
     public function ExportTransaction()
     {
     
-        
+        $now = now()->format('D_M_Y');
 
-        $excel = Excel::download(new TransactionExport, 'transaction.xlsx');
+        $excel = Excel::download(new TransactionExport, 'transaction_exported_at_'.$now.'.xlsx');
         return $excel;
     }
 }

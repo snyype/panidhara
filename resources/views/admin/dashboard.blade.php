@@ -56,7 +56,7 @@
                         <!-- Logo icon -->
                         <b class="logo-icon">
                             <!-- Dark Logo icon -->
-                            <img style="width: 100%; height:75px" src="{{ URL::asset('images/logo/dashboardlogo.jpg')}}" alt="HamroTanker" />
+                            <img style="width: 100%; height:75px" src="{{ URL::asset('images/logo/dashboardlogo.jpg')}}" alt="Panidhara" />
                         </b>
                     </a>
                     <!-- ============================================================== -->

@@ -41,12 +41,11 @@
         <td style="width: 50px;text-align:center;">Rs.{{$post->amount}}</td>
         <td style="width: 50px;text-align:center;">{{$post->token}}</td>
         <td style="width: 50px;text-align:center;"><form action="/admin/meter/{{$post->id}}/edit" method="GET"> <input class="btn btn-success" type="submit" value="Update"></form></td>
-        <form method="GET" action="/admin/transaction/export-transaction">
-        <td><input class="btn btn-danger" type="submit" value="Export data To ExcelSheet"></td>
-        </form>
     </tr>
 @endforeach
-
+<form method="GET" action="/admin/transaction/export-transaction">
+<td><input class="btn btn-danger" type="submit" value="Export Excelsheet"></td>
+</form>
 
 
 
