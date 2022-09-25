@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Models\NewConnection;
+use App\Models\Notification;
 use App\Models\Carousel;
 use App\Models\Meter;
 
@@ -29,25 +30,33 @@ class newconnectionController extends Controller
     
     public function reqNewConnection($id)
     {
-        $user=Auth::id();
-        $data = NewConnection::where('user_id',$user)->orwhere('status','=','confirmed')->count();
-        $data2 = NewConnection::where('user_id',$user)->orwhere('status','=','confirmed')->get();
-        $data3 = Meter::find($id);
 
-        $carousel = Carousel::all();
-        
-        
-
-
-        if($data != 0)
-        {
-
-           
-            return view('Frontend.meterrequestform',compact('data2','carousel','data3'));
+        if (auth()->check()){
+            $user=Auth::id();
+            $data = NewConnection::where('user_id',$user)->where('status','=','confirmed')->count();
+            $data2 = NewConnection::where('user_id',$user)->where('status','=','confirmed')->get();
+            $data3 = Meter::find($id);
+    
+            $carousel = Carousel::all();
+            
+            
+    
+    
+            if($data != 0)
+            {
+    
+               
+                return view('Frontend.meterrequestform',compact('data2','carousel','data3'));
+            }
+            else{
+                return redirect('/');
+            }
         }
         else{
-            return redirect('/');
+            return redirect('/login');
         }
+
+      
 
        
 
@@ -76,6 +85,7 @@ class newconnectionController extends Controller
             
         ]);
 
+       
         $data = new NewConnection();
         $data->user_name = $request->user_name;
         $data->user_id = $request->user_id;
@@ -92,6 +102,11 @@ class newconnectionController extends Controller
         if($data->save()){
             
             //Redirect with Flash message
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "Request For New Connection Submitted";
+            $notification->save();
+
             return redirect('/myrequests')->with('status', 'Requested Successfully!');
         }
         else{
@@ -127,6 +142,33 @@ class newconnectionController extends Controller
 
         if($data->save())
         {
+
+            
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "You (Admin) changed $data->name's connection request status to confirmed";
+            $notification->save();
+
+            return redirect('/admin/confirmedconnectionrequest');
+        }
+
+    }
+
+    public function ChangeToPending($id)
+    {
+
+        $data = NewConnection::find($id);
+        $data->status = 'pending';
+
+        $data->save();
+
+        if($data->save())
+        {
+
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "You (Admin) reverted $data->name's connection request Status to Pending";
+            $notification->save();
             return redirect('/admin/connectionrequest');
         }
 

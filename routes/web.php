@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 Use App\Http\Controllers\FrontEndController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Carouselcontroller;
 use App\Http\Controllers\newconnectioncontroller;
 use App\Http\Controllers\TestimonyController;
 use App\Http\Controllers\PaymentController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,9 +27,18 @@ use App\Http\Controllers\PaymentController;
 
 Route::namespace('App\Http\Controllers')->group(function () 
 {
-   
+    Route::group(['middleware'=>'auth'],function (){
+        Route::get('/request-now/{id}',[newconnectioncontroller::class, 'reqNewConnection']);
+        
+    });
 
-    Route::get('/','FrontendController@index');
+    Route::group(['middleware'=>'auth'],function (){
+        Route::get('/notifications',[FrontendController::class, 'NotificationActions']);
+        
+    });
+    Route::get('/notification-read/{id}','FrontendController@NotificationRead');
+
+    Route::get('/','FrontendController@index')->middleware('verified');
     Route::get('logout', '\App\Http\Controllers\Auth\AuthenticatedSessionController@logout');
     Route::get('/user','HomeController@UserDetails');
     Route::post('/update-profile/{id}','HomeController@Update');
@@ -40,10 +51,12 @@ Route::namespace('App\Http\Controllers')->group(function ()
     Route::post('/submit-form','newconnectionController@store');
     Route::get('/purchase-meter/{id}','MeterController@purchasemeter');
     Route::get('/maintainance','MeterController@maintanance');
+    Route::get('/mymeter','MeterController@mymeter');
     Route::post('/submitmaintainance','MeterController@storemaintainance');
     Route::post('/khalti/payment/verify',[PaymentController::class,'verifyPayment'])->name('khalti.verifyPayment');
     Route::post('/khalti/payment/store',[PaymentController::class,'storePayment'])->name('khalti.storePayment');
     Route::get('/request-now/thankyou',[PaymentController::class,'thankyou'])->name('khalti.success');
+
    
      
       
@@ -101,10 +114,9 @@ Route::group(['prefix'=>'admin','middleware'=>'admin'],function (){
 
     });
 
-
-
     Route::group(['prefix'=>'confirmedconnectionrequest','middleware'=>'auth'],function (){
         Route::get('/',[newconnectionController::class, 'ShowConfirmedConn']);
+        Route::get('/changetopending/{id}',[newconnectionController::class, 'ChangeToPending']);
         
 
     });
@@ -126,6 +138,25 @@ Route::group(['prefix'=>'admin','middleware'=>'admin'],function (){
         
 
     });
+    
+    Route::group(['prefix'=>'search-meter','middleware'=>'auth'],function (){
+        Route::post('/',[MeterController::class, 'SearchMeter']);
+        
+
+    });
+
+    Route::group(['prefix'=>'transaction','middleware'=>'auth'],function (){
+        Route::get('/',[MeterController::class, 'ViewTransaction']);
+        Route::get('/export-transaction',[MeterController::class, 'ExportTransaction']);
+        
+
+    });
+
+    Route::group(['prefix'=>'search-transaction','middleware'=>'auth'],function (){
+        Route::post('/',[MeterController::class, 'SearchTransaction']);
+        
+
+    });
 
 
 
@@ -136,9 +167,23 @@ Route::group(['prefix'=>'admin','middleware'=>'admin'],function (){
 
 
 
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
 
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+ 
+    return redirect('/home');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
-Auth::routes();
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+ 
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+Auth::routes(['verify' => true]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

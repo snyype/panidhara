@@ -1,6 +1,27 @@
 
 @extends('admin.dashboard')
 @section('content')
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<style>
+    .cell {
+  max-width: 30px; /* tweak me please */
+  white-space : nowrap;
+  overflow : hidden;
+}
+
+.expand-small-on-hover:hover {
+  max-width : 200px; 
+  text-overflow: ellipsis;
+}
+
+.expand-maximum-on-hover:hover {
+  max-width : initial; 
+}
+</style>
+
+</head>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
@@ -19,7 +40,7 @@
                                     <th class="border-top-0">Name</th>
                                     <th class="border-top-0">Address</th>
                                     <th class="border-top-0">Number</th>
-                                    <th class="border-top-0">Citizenship No.</th>
+                                    <th class="border-top-0 ">Citizenship No.</th>
                                     <th class="border-top-0">House No.</th>
                                     <th class="border-top-0">Latitude</th>
                                     <th class="border-top-0">Longitude</th>
@@ -35,11 +56,11 @@
                                     <td>{{$post->user_name}}</td>
                                     <td>{{$post->name}}</td>
                                     <td>{{$post->address}}</td>
-                                    <td>{{$post->number}}</td>
-                                    <td>{{$post->citizenship_number}}</td>
+                                    <td class="cell expand-maximum-on-hover">{{$post->number}}</td>
+                                    <td class="cell expand-maximum-on-hover">{{$post->citizenship_number}}</td>
                                     <td>{{$post->house_number}}</td>
-                                    <td>{{$post->latitude}}</td>
-                                    <td>{{$post->longitude}}</td>
+                                    <td class="cell expand-maximum-on-hover">{{$post->latitude}}</td>
+                                    <td class="cell expand-maximum-on-hover">{{$post->longitude}}</td>
                                     <td>{{$post->status}}</td>
                              
                                    <td> <form method="GET" action="/admin/connectionrequest/{{$post->id}}">

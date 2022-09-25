@@ -1,12 +1,26 @@
 @extends('admin.dashboard')
 @section('content')
+<head>
+    @livewireStyles
+</head>
 
 
-
+<body>
+    
 
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-12">
+                        <div class="col-md-8">
+                         
+                                <div class="col-md-4">
+                                    <input type="text" placeholder="Search..." class="form-control mt-0" wire:modal="search">
+                                </div>
+                                    
+                                    
+                                
+                          
+                        </div><br>
                         <div class="white-box">
                             @if (session('status'))
     <div class="alert alert-success">
@@ -35,6 +49,9 @@
                                             <td><?php if($post['verified']=="2") {echo "Verified";} else {echo "not verified";}?></td>
                                             <td><?php if($post['role']=="2") {echo "Admin";} else {echo "User";}?></td>
                                             <td style="width: 40px;"><a href="/admin/userstable/{{$post->id}}/edit"><button class="btn btn-success">Update</button></a></td>
+                                            <td style="width: 40px;"><a class="btn btn-info" href="{{$post->gallery ? asset("/images/users/".$post["gallery"]) :asset("/images/users/profile.jpg")}}" onclick="window.open(this.href, '_blank', 'left=40,top=20,width=700,height=700,toolbar=1,resizable=0'); return false;">View Profile</a></td>
+                                            <td style="width: 40px;"><a class="btn btn-info" href="{{$post->gallery ? asset("/images/users/".$post["gallery2"]) :asset("/images/users/ctfront.png")}}" onclick="window.open(this.href, '_blank', 'left=40,top=20,width=700,height=700,toolbar=1,resizable=0'); return false;">View Id Frontside</a></td>
+                                            <td style="width: 40px;"><a class="btn btn-info" href="{{$post->gallery ? asset("/images/users/".$post["gallery3"]) :asset("/images/users/ctback.png")}}" onclick="window.open(this.href, '_blank', 'left=40,top=20,width=700,height=700,toolbar=1,resizable=0'); return false;">View Id Backside</a></td>
                                             <form method="POST" action="/admin/userstable/{{$post->id}}">
                                                 @csrf
                                                 @method('delete')
@@ -55,4 +72,7 @@
         </div>
         
     </div>
+    @livewireScripts
+</body>
+
    @endsection

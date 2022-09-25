@@ -13,13 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('transaction', function (Blueprint $table) {
+        Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->string('transaction_id');
-            $table->integer('amount');
-            $table->string('meter_id');
-            $table->string('meter_name');
-            $table->string('token');
+            $table->integer('user_id')->unsigned();  
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');  
+            $table->boolean('is_opened')->default(false);
+            $table->string('message');
             $table->timestamps();
         });
     }
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('transaction');
+        Schema::dropIfExists('notifications');
     }
 };

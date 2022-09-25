@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Testimony;
+use Illuminate\Support\Facades\Auth;
 
 class TestimonyController extends Controller
 {

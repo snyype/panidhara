@@ -1,6 +1,6 @@
 
 <?php
-
+  use Carbon\Carbon;
 $user = auth()->user();
 ?>
 <!DOCTYPE html>
@@ -17,7 +17,7 @@ $user = auth()->user();
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>HamroTanker</title>
+  <title>Panidhara | Home</title>
 
   <!-- slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
@@ -47,17 +47,17 @@ $user = auth()->user();
           </div>
           @foreach ($carousel as $item)
           <div class="carousel-item">
-          
             <div class="carousel-caption d-none d-md-block slider-text">
             <h3 class="display-4">{{$item->name}}</h3>
                 <p class="lead">{{$item->desc}}</p>
                 </div>
             <div style="height:270px;width:100%" class="img-box">
-            <img style="max-width: 100%;height:100%" src="{{asset('images/carousel/'.$item["gallery"])}}" alt="">
+            <img style="max-width: 100%;height:100%" src="{{asset('images/carousel/'.$item["gallery"])}}" alt="">    
             </div>
             </div>
+            @endforeach
           </div>
-          @endforeach
+         
         </div>
        
         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -100,14 +100,36 @@ $user = auth()->user();
                 <li class="nav-item">
                   <a class="nav-link" href="#contactus">Contact Us</a>
                 </li>
+               
+                @php
+                use App\Models\Notification;
+                if(auth()->check()){
+                  $new_notification = Notification::where('user_id', auth()->user()->id)->where('is_opened', false)->get();
+              $count_notification = Notification::where('user_id', auth()->user()->id)->where('is_opened', false)->count();
+                }
+              else{
+                $new_notification = [];
+                $count_notification = 0;
+              }   
+              @endphp
+              @if($user == NULL)
+
+              @else
+                <li class="nav-item">
+                  <a class="nav-link" href="/notifications">Notifications <span style="border-radius:10px; background:red; width:60px; height:10px; padding-right:8px;padding-left:8px;padding-top:1px;">{{$count_notification}}</span></a>
+                  </li>
+           @endif
                 @if(Auth::user())
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" data-target="#navItemGame"  id="navbarDropdown" role="button" data-toggle="dropdown" v-pre ><?php
                     print($user->name);?> @if($user['verified']=='2')<img style='width: 25px;height:25px' title="Verified User" src='{{asset("/images/badges/admin.png")}}'/>@endif
                   </a>
                 
+                
+
                 <div id="#navItemGame" class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a id="#navItemGame" class="dropdown-item" href="/myrequests">My Requests</a>
+                    <a id="#navItemGame" class="dropdown-item" href="/mymeter">My Meter Info</a>
                     <a id="#navItemGame" class="dropdown-item" href="/maintainance">Maintainance</a>
                     <a id="#navItemGame" class="dropdown-item" href="/user">Profile</a>
                     <a id="#navItemGame" class="dropdown-item" href="/logout">Logout</a>
@@ -214,11 +236,19 @@ $user = auth()->user();
     <h4>
       After Registration Go To your Profile And Fill Mandatory Fields And Upload Mandatory Documents
     </h4><br><br>
+    @if(!empty($myreq))
+    @if($myreq['status'] == "confirmed")
+    <p>
+      Admin Confirmed Your Request {{ Carbon::create($myreq->created_at)->diffForHumans() }}
+    <p>
+    @else
     <p>
       Request a new Tap water connection,
       Proceed further by clicking on the "PROCEED" Button.
-      @if($user==NULL)
-      <p>
+    <p>
+    @endif
+    @endif
+        @if($user==NULL)
       <div class="btn-box">
           <a href="/proceed">
             PROCEED
@@ -244,10 +274,17 @@ $user = auth()->user();
             PROCEED
           </a>
           @else
-          <a style="color:red" onclick="alert('Requested already, not confirmed yet')">
+          @if($myreq['status'] == "confirmed")
+          <a style="color:green" href="/myrequests">
+          Admin Confirmed Your Request , Go To Myrequests
+          </a><br><br>
+          <span>Tip: Go To My Requests To Check Confirmation Status</span>
+          @else
+          <a style="color:red" onclick="alert('Requested already, Admin did not confirmed yet')">
             You Have Already Requested , waiting For Confirmation.
           </a><br><br>
           <span>Tip: Go To My Requests To Check Confirmation Status</span>
+          @endif
         @endif
         </div>
         <br><br>

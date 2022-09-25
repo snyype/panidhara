@@ -29,7 +29,7 @@
           </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Name</label>
-            <input type="text" class="form-control" id="exampleInputPassword1"  name="user_name" value="{{$data->name}}">
+            <input type="text" class="form-control" id="exampleInputPassword1"  name="name" value="{{$data->name}}">
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Price</label>

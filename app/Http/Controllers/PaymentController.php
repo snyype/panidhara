@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\Notification;
+use App\Models\Meter;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -13,7 +16,7 @@ class PaymentController extends Controller
 
         $args = http_build_query(array(
             'token' => $token,
-            'amount'  => 150000,
+            'amount'  => 1000,
         ));
 
         $url = "https://khalti.com/api/v2/payment/verify/";
@@ -32,40 +35,40 @@ class PaymentController extends Controller
         $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         $data1 = json_decode($response,true);
-        $amount = $data1['amount'];
+        $amount = $data1['amount']*150/100;
         $idx = $data1['idx'];
         $productid = $data1['product_identity'];
         $token = $data1['token'];
-        $metername = "Khaanepani Sewa";
+        $metername = Meter::find($productid);
+        
        
 
         $store = Transaction::insert(
-            ['transaction_id' =>$idx, 'amount' =>$amount,'meter_id'=>$productid,'token'=>$token,'meter_name'=>$metername]
+            ['transaction_id' =>$idx, 'amount' =>$amount,'meter_id'=>$productid,'token'=>$token,'meter_name'=>$metername->name]
         );
-        
-    return $response;
+    
+            
+            $metername->user_name = auth()->user()->name;
+            $metername->user_id = Auth::id();
+            $metername->status = "Booked";
+            $metername->save();
+
+
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "You Purchased $metername->name at price of Rs. $amount . PayType : Khalti";
+            $notification->save();
+
+            return $response;
+           
+            return redirect('/mymeter');
+           
+           
 
 //        
                 
     }
 
-    public function storePayment(Request $request)
-    {
-
-        $response = $request->response;
-
-        $snype = json_decode($response, true);
-
-        var_dump($snype);
-
-        foreach ($snype as $name => $data) {
-            var_dump($name, $data['idx'], $data['amount']); // $name is the Name of Room
-        }
-    }
-
-
-    public function thankyou()
-    {
-        return view("thankyou");
-    }
+ 
+   
 }

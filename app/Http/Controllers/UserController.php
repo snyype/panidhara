@@ -5,16 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Auth; 
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
+
 
 class UserController extends Controller
 {
+   public $search;
+
     public function index()
     {
         //Read
-        
-        $data = User::all();
+
+        $searchword = '%'.$this->search.'%';
+        $data = User::where('name','LIKE',$searchword)
+        ->orwhere('email','LIKE',$searchword)
+        ->orwhere('verified','LIKE',$searchword)
+        ->orwhere('role','LIKE',$searchword)
+        ->orderBy('id','ASC')->get();
         return view('admin.userstable',compact('data'));
+
+
     }
 
     /**

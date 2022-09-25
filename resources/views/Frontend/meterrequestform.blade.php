@@ -17,7 +17,7 @@ $user = auth()->user();
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>HamroTanker</title>
+  <title>HamroTanker | Request</title>
 
   <!-- slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
@@ -104,6 +104,22 @@ $user = auth()->user();
                 <li class="nav-item">
                   <a class="nav-link" href="#contactus">Contact Us</a>
                 </li>
+                @php
+                use App\Models\Notification;
+                if(auth()->check()){
+                  $new_notification = Notification::where('user_id', auth()->user()->id)->where('is_opened', false)->get();
+              $count_notification = Notification::where('user_id', auth()->user()->id)->where('is_opened', false)->count();
+                }
+              else{
+                $new_notification = [];
+                $count_notification = 0;
+              }
+                    
+                @endphp
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/notifications">Notifications <span style="border-radius:10px; background:red; width:60px; height:10px; padding-right:8px;padding-left:8px;padding-top:1px;">{{$count_notification}}</span></a>
+                </li>
                 @if(Auth::user())
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" data-target="#navItemGame"  id="navbarDropdown" role="button" data-toggle="dropdown" v-pre ><?php
@@ -112,6 +128,8 @@ $user = auth()->user();
                 
                 <div id="#navItemGame" class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a id="#navItemGame" class="dropdown-item" href="/myrequests">My Requests</a>
+                    <a id="#navItemGame" class="dropdown-item" href="/mymeter">My Meter Info</a>
+                    <a id="#navItemGame" class="dropdown-item" href="/maintainance">Maintainance</a>
                     <a id="#navItemGame" class="dropdown-item" href="/user">Profile</a>
                     <a id="#navItemGame" class="dropdown-item" href="/logout">Logout</a>
                   </div>
@@ -175,7 +193,7 @@ $user = auth()->user();
         <div class="container-fluid">
             <div class="row">
   
-        <div style="margin-bottom: 30px" class="col-md-3">
+        <div style="margin-bottom: 30px" class="col-md-6">
         <div class="img-box">
         
      
@@ -186,93 +204,98 @@ $user = auth()->user();
           </a>
         </div>
         </div> -->
+       @if($data3['status'] == "Booked")
+        <br>
+       <div style="margin-left:300px">
+        <div style="width:500px">
+       <p style="color:red">Sorry This Meter Is Not Available</p> 
+        </div>
        
 
-        <div class="card text-center">
-          <div class="card-header">
-            METER INFO
-          </div>
-          <div class="card-header">
-            Rs.{{$data3->price}}
-          </div>
+       @else
+<div style="margin-left:350px">
+  <div style="width:400px" class="card text-center">
+    <div class="card-header">
+      METER INFORMATION
+    </div>
+    <div class="card-header">
+     Name :  {{$data3->name}}
+    </div>
+    <div class="card-header">
+     Price :  Rs.{{$data3->price}}
+    </div>
 
 
-          <div class="card-header">
-            Rs.{{$data3->created_at}}
-          </div>
-         
-          <div class="card-header">
-            
-            <button style="border: 0px" id="payment-button"><img style="width:90px; height:37px;" src="{{ URL::asset('images/logo/khalti-logo.png')}}"></button>
-          {{-- <a href="/purchase-meter/{{$data3->id}}"><button class="btn btn-success">Pay with esewa</button></a> --}}
-          </div>
+    <div class="card-header">
+      Date Added : {{$data3->created_at->format('M d ')}}
+    </div>
+   
+    <div class="card-header">
+      Payment via <br>
+      <a  style="border: 0px; visited:none" id="payment-button"><img style="width:90px; height:37px;" src="{{ URL::asset('images/logo/khalti-logo.png')}}"></button>
+    {{-- <a href="/purchase-meter/{{$data3->id}}"><button class="btn btn-success">Pay with esewa</button></a> --}}
+    </div>
+</div>
+        
           <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-         
-          <script>
-            var config = {
-                // replace the publicKey with yours
-                "publicKey": "{{ config('app.khalti_public_key') }}",
-                "productIdentity": "{{$data3->id}}",
-                "productName": "{{$data3->name}}",
-                "productUrl": "http://127.0.0.1:8000/request-now/{{$data3->id}}",
-                "paymentPreference": [
-                    "KHALTI",
-                    "EBANKING",
-                    "MOBILE_BANKING",
-                    "CONNECT_IPS",
-                    "SCT",
-                    ],
-                "eventHandler": {
-
-                
-                    onSuccess (payload) {
-                        // hit merchant api for initiating verfication
-                        $.ajax({
-                            type : 'POST',
-                            url : "{{ route('khalti.verifyPayment') }}",
-                            data: {
-                                token : payload.token,
-                                amount : payload.amount,
-                                "_token" : "{{ csrf_token() }}"
-                            },
-
-                            success : function(res){
-                            $.ajax({
-                            type : 'POST',
-                            url : "/khalti/payment/store",
-                            data: {
-                             "response" : res,
-                                "_token" : "{{ csrf_token() }}"
-                            },
-                            success: function(res){
-                              console.log('payment successful')
-                                    },
-                              });
-                                alert('Payment Successful');
-                                console.log(res)
-                               
-                            }
-                        });
-                        console.log(payload);
-                    },
-                    onError (error) {
-                        console.log(error);
-                    },
-                    onClose () {
-                        console.log('widget is closing');
-                    }
-                }
-            };
-    
-            var checkout = new KhaltiCheckout(config);
-            var btn = document.getElementById("payment-button");
-            btn.onclick = function () {
-                // minimum transaction amount must be 10, i.e 1000 in paisa.
-                checkout.show({amount: {{$data3->price}}*100});
-            }
-        </script>
+         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+         <script>
+          var config = {
+              // replace the publicKey with yours
+              "publicKey": "{{ config('app.khalti_public_key') }}",
+              "productIdentity": "{{$data3->id}}",
+              "productName": "{{$data3->name}}",
+              "productUrl": "http://127.0.0.1:8000/request-now/{{$data3->id}}",
+              "paymentPreference": [
+                  "KHALTI",
+                  "EBANKING",
+                  "MOBILE_BANKING",
+                  "CONNECT_IPS",
+                  "SCT",
+                  ],
+              "eventHandler": {
+              
+                  onSuccess (payload) {
+                      // hit merchant api for initiating verfication
+                      $.ajax({
+                          type : 'POST',
+                          url : "{{ route('khalti.verifyPayment') }}",
+                          data: {
+                              token : payload.token,
+                              amount : payload.amount,
+                              "_token" : "{{ csrf_token() }}"
+                          },
+                          success: function(res){
+                            console.log('payment successful');
+                            console.log(res);
+                            alert('success');
+                            window.location.href = "/mymeter";
+                           },
+                           
+                             
+                          
+                      });
+                      console.log(payload);
+                  },
+                  onError (error) {
+                      console.log(error);
+                  },
+                  onClose () {
+                      console.log('widget is closing');
+                  }
+              }
+          };
+  
+          var checkout = new KhaltiCheckout(config);
+          var btn = document.getElementById("payment-button");
+          btn.onclick = function () {
+              // minimum transaction amount must be 10, i.e 1000 in paisa.
+              checkout.show({amount: 1000});
+          }
+      </script>
           
             </div>
+            @endif
         </div>
       </div>
     </div>

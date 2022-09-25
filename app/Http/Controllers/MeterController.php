@@ -8,6 +8,12 @@ use App\Models\Carousel;
 use Illuminate\Support\Facades\Auth;
 use App\Models\NewConnection;
 use App\Models\Maintanance;
+use App\Models\Notification;
+use App\Models\Transaction;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TransactionExport;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+
 
 class MeterController extends Controller
 {
@@ -16,7 +22,7 @@ class MeterController extends Controller
         $carousel = Carousel::all();
         $user = Auth::id();
         $count = NewConnection::where('user_id',$user)->where('status',"=","confirmed")->count();
-        $meter = 
+        $metercount = Meter::where('user_id', auth()->user()->id)->count();
         $meters = Meter::where('status',"=","available")->orwhere('status',"=","processing")->orwhere('status',"=",'Booked')->get();
 
 
@@ -24,7 +30,7 @@ class MeterController extends Controller
             return redirect('/');
         }
         else{
-            return view('Frontend.availablemeters',compact('meters','carousel','count'));
+            return view('Frontend.availablemeters',compact('meters','carousel','count','metercount'));
         }
       
     }
@@ -58,6 +64,7 @@ class MeterController extends Controller
      
             $data = new Meter();
             $data->name = $request->name;
+            $data->meter_number = uniqid();
             $data->user_id = $request->user_id;
             $data->user_name = $request->user_name;
             $data->save();
@@ -65,6 +72,12 @@ class MeterController extends Controller
 
         if($data->save()){
             //Redirect with Flash message
+
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "You (Admin) Added $data->name successfully";
+            $notification->save();
+
             return redirect('/admin/meter')->with('status', 'Meter added Successfully!');
         }
         else{
@@ -84,9 +97,17 @@ class MeterController extends Controller
         $data->user_name = $request->user_name;
         $data->status = $request->status;
         $data->unit = $request->unit;
+        $data->due_amount = $request->unit*15;
+        $data->updated_at = now();
         $data->save();
 
         if($data->save()){
+
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "You (Admin) updated $data->name successfully";
+            $notification->save();
+
             return redirect('/admin/meter')->with('status', 'Meter updated Successfully!');
         }
         else{
@@ -108,7 +129,7 @@ class MeterController extends Controller
         $data->save();
 
         if($data->save()){
-            return redirect('/admin/meter');
+            return redirect('/mymeter');
         }
 
 
@@ -128,6 +149,12 @@ class MeterController extends Controller
         //Delete
         $data = Meter::find($id);
         if($data->delete()){
+
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "You (Admin) deleted $data->name successfully";
+            $notification->save();
+
             return redirect('/admin/meter')->with('status', 'Meter was deleted successfully');
         }
         else return redirect('/admin/meter')->with('status', 'There was an error');
@@ -138,7 +165,9 @@ class MeterController extends Controller
     public function maintanance()
     {
         $carousel = Carousel::all();
-        return view('Frontend.maintainance',compact('carousel'));
+        $count = Maintanance::where('user_id', auth()->user()->id)->count();
+        $data = Maintanance::where('user_id', auth()->user()->id)->get();
+        return view('Frontend.maintainance',compact('carousel','count','data'));
     }
 
     public function storemaintainance(Request $request)
@@ -164,10 +193,16 @@ class MeterController extends Controller
 
         if($data->save()){
             //Redirect with Flash message
-            return redirect('/admin/maintanance')->with('status', 'Meter added Successfully!');
+
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "You requested for maintanance";
+            $notification->save();
+
+            return redirect('/maintanance')->with('status', 'Request For New Maintanance Submitted');
         }
         else{
-            return redirect('/admin/meter/create')->with('status', 'There was an error!');
+            return redirect('/maintanance')->with('status', 'There was an error!');
         }
 
     }
@@ -176,6 +211,7 @@ class MeterController extends Controller
     public function maintananceview()
     {
         $data = Maintanance::all();
+
 
 
         return view('admin.maintanance.maintanance',compact('data'));
@@ -196,5 +232,66 @@ class MeterController extends Controller
         $data = NewConnection::find($id);
 
         return view('admin.maintanance.viewconnectionmap',compact('data'));
+    }
+
+
+    public function mymeter()
+    {
+        $user = Auth::id();
+        $carousel = Carousel::all();
+        $mymeter = Meter::where('user_id', $user)->first();
+        $count = Meter::where('user_id', $user)->count();
+        
+
+        return view('Frontend.mymeter',compact('mymeter','carousel','count'));
+    }
+
+    public function SearchMeter(Request $request)
+    {
+    
+        
+      $data = Meter::orwhere('name','LIKE',"%".$request->input("query")."%")->orwhere('meter_number',$request->input("query"))->get();
+     
+        return view('admin.meter.searchresults',compact('data'));
+    }
+
+    public function ViewTransaction(Request $request)
+    {
+    
+        
+      $data = Transaction::all();
+     
+        return view('admin.transaction.transactions',compact('data'));
+    }
+
+    public function SearchTransaction(Request $request)
+    {
+    
+        
+      $data = Transaction::orwhere('meter_name','LIKE',"%".$request->input("query")."%")->orwhere('transaction_id',$request->input("query"))->get();
+    
+        return view('admin.transaction.searchtransactions',compact('data'));
+    }
+
+    public function headings(): array
+    {
+        //Put Here Header Name That you want in your excel sheet 
+        return [
+            'ID',
+            'Transaction Id',
+            'Meter Id',
+            'Meter Name',
+            'Amount',
+            'Token'
+        ];
+    }
+    
+    public function ExportTransaction()
+    {
+    
+        
+
+        $excel = Excel::download(new TransactionExport, 'transaction.xlsx');
+        return $excel;
     }
 }

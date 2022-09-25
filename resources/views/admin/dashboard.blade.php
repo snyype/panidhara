@@ -5,6 +5,7 @@
 <html dir="ltr" lang="en">
 
 <head>
+    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Tell the browser to be responsive to screen width -->
@@ -80,14 +81,7 @@
                         <!-- ============================================================== -->
                         <!-- Search -->
                         <!-- ============================================================== -->
-                        <li class=" in">
-                            <form role="search" class="app-search d-none d-md-block me-3">
-                                <input type="text" placeholder="Search..." class="form-control mt-0">
-                                <a href="" class="active">
-                                    <i class="fa fa-search"></i>
-                                </a>
-                            </form>
-                        </li>
+                       
                         <!-- ============================================================== -->
                         <!-- User profile and search -->
                         <!-- ============================================================== -->
@@ -129,7 +123,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/carousel"
                                 aria-expanded="false">
-                                <i class="fa fa-bookmark" aria-hidden="true"></i>
+                                <i class="fa fa-sliders-v" aria-hidden="true"></i>
                                 <span class="hide-menu">Carousel</span>
                             </a>
                         </li>
@@ -137,7 +131,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/meter"
                                 aria-expanded="false">
-                                <i class="fa fa-watch" aria-hidden="true"></i>
+                                <i class="fa fa-tachometer" aria-hidden="true"></i>
                                 <span class="hide-menu">Meters</span>
                             </a>
                         </li>
@@ -145,28 +139,43 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/connectionrequest"
                                 aria-expanded="false">
-                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                <span class="hide-menu">Active Connection Requests<span></span> </span>
+                                <i class="fa fa-arrow-to-left" aria-hidden="true"></i>
+                                @php
+                                use App\Models\NewConnection;
+                                $count = NewConnection::where('status','=','pending')->count();
+                                @endphp
+                                <span class="hide-menu">Active Conn Requests  <span>@if($count == 0) @else = <span style="color:red; font-weight: bold;"> {{$count}}</span> @endif</span> </span>
                             </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/confirmedconnectionrequest"
                                 aria-expanded="false">
-                                <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                <span class="hide-menu">Confirmed Connection Requests<span></span> </span>
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                                @php
+                              
+                                $count2 = NewConnection::where('status','=','confirmed')->count();
+                                @endphp
+                                <span class="hide-menu">Confirmed Conn Requests<span><span>@if($count2 == 0) @else = <span style="color:red; font-weight: bold;"> {{$count2}}</span> @endif</span> </span>
                             </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/maintanance"
                                 aria-expanded="false">
-                                <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
+                                <i class="fa fa-wrench" aria-hidden="true"></i>
                                 <span class="hide-menu">Maintanance Requests</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/transaction"
+                                aria-expanded="false">
+                                <i class="fa fa-credit-card-front" aria-hidden="true"></i>
+                                <span class="hide-menu">Transaction History</span>
                             </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/testimony"
                                 aria-expanded="false">
-                                <i class="fa fa-comment" aria-hidden="true"></i>
+                                <i class="fa fa-quote-left" aria-hidden="true"></i>
                                 <span class="hide-menu">Testimony</span>
                             </a>
                         </li>

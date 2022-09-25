@@ -17,7 +17,7 @@ $user = auth()->user();
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>HamroTanker</title>
+  <title>Panidhara | Meters</title>
 
   <!-- slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
@@ -102,6 +102,22 @@ $user = auth()->user();
                 <li class="nav-item">
                   <a class="nav-link" href="#contactus">Contact Us</a>
                 </li>
+                @php
+                use App\Models\Notification;
+                if(auth()->check()){
+                  $new_notification = Notification::where('user_id', auth()->user()->id)->where('is_opened', false)->get();
+              $count_notification = Notification::where('user_id', auth()->user()->id)->where('is_opened', false)->count();
+                }
+              else{
+                $new_notification = [];
+                $count_notification = 0;
+              }
+                    
+                @endphp
+
+                <li class="nav-item">
+                  <a class="nav-link" href="/notifications">Notifications <span style="border-radius:10px; background:red; width:60px; height:10px; padding-right:8px;padding-left:8px;padding-top:1px;">{{$count_notification}}</span></a>
+                </li>
                 @if(Auth::user())
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" data-target="#navItemGame"  id="navbarDropdown" role="button" data-toggle="dropdown" v-pre ><?php
@@ -110,6 +126,8 @@ $user = auth()->user();
                 
                 <div id="#navItemGame" class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a id="#navItemGame" class="dropdown-item" href="/myrequests">My Requests</a>
+                    <a id="#navItemGame" class="dropdown-item" href="/mymeter">My Meter Info</a>
+                    <a id="#navItemGame" class="dropdown-item" href="/maintainance">Maintainance</a>
                     <a id="#navItemGame" class="dropdown-item" href="/user">Profile</a>
                     <a id="#navItemGame" class="dropdown-item" href="/logout">Logout</a>
                   </div>
@@ -195,6 +213,7 @@ $user = auth()->user();
   <!-- end shop section -->
 
   <!-- Table section -->
+
   <div class="container">
  <table class="table table-hover">
   <thead>
@@ -207,14 +226,14 @@ $user = auth()->user();
     </tr>
   </thead>
   <tbody>
+   
+    @if($metercount == 0)
+
   @foreach($meters as $data)
-  
     <tr>
       <th scope="row">{{$data->id}}</th>
-      @if($data['status']=="processing")
-      <td>{{$data->user_name}}</td>
-      @elseif($data['status']=="available")
-      <td>{{$data->user_name}} </td>
+      @if($data['status']=="available")
+      <td>Not Assigned To Any User </td>
       @elseif($data['status']=="Booked")
       <td>{{$data->user_name}} </td>
       <td>{{$data->status}} </td>
@@ -234,6 +253,44 @@ $user = auth()->user();
   
     
    @endforeach
+
+   @else
+  
+<section class="shop_section layout_padding">
+    <div class="container">
+      <div class="box">
+        <div class="detail-box">
+          <h2 style="color:red">
+        You Already Own A Meter
+          </h2>
+          <div class="btn-box">
+            <a href="/mymeter">
+             Go To My Meter
+            </a>
+          </div>
+          <p>
+          </p>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+  
+        <div style="margin-bottom: 30px" class="col-md-3">
+        <div class="img-box">
+        
+     
+        </div>
+        
+        </div>
+
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+   @endif
+ 
   </tbody>
 </table>
 

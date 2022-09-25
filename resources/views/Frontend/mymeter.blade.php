@@ -1,6 +1,6 @@
 
 <?php
-
+use Carbon\Carbon;
 $user = auth()->user();
 ?>
 <!DOCTYPE html>
@@ -17,29 +17,20 @@ $user = auth()->user();
   <meta name="description" content="" />
   <meta name="author" content="" />
 
-  <title>Panidhara | Maintanance</title>
+  <title>Panidhara | My Meter</title>
 
-  <!-- Map scripts stylesheet -->
-  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <!------ Include the above in your HEAD tag ---------->
-
-
-
-
+  <!-- slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
 
   <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
 
   <!-- fonts style -->
   <link href="https://fonts.googleapis.com/css?family=Baloo+Chettan|Dosis:400,600,700|Poppins:400,600,700&display=swap" rel="stylesheet" />
   <!-- Custom styles for this template -->
-  <link href="{{ asset('css/style.css') }}" rel="stylesheet" />
+  <link href="css/style.css" rel="stylesheet" />
   <!-- responsive style -->
-  <link href="{{ asset('css/responsive.css') }}" rel="stylesheet" />
+  <link href="css/responsive.css" rel="stylesheet" />
 </head>
 
 <body>
@@ -186,13 +177,13 @@ $user = auth()->user();
       
  
 
-@if($count == 0)
+
   <section class="shop_section layout_padding">
     <div class="container">
       <div class="box">
         <div class="detail-box">
           <h2>
-          FILL THE FORM BELOW TO PROCEED FURTHER
+          MY Meter Status
           </h2>
           <p>
           </p>
@@ -202,19 +193,81 @@ $user = auth()->user();
   
         <div style="margin-bottom: 30px" class="col-md-3">
         <div class="img-box">
+        
+     
+        <!-- </div>
+        <div class="btn-box">
+          <a onclick="alert('Sorry this tanker is being delivered')">
+            ❌ Booked
+          </a>
+        </div>
+        </div> -->
+
             </div>
         </div>
       </div>
     </div>
   </section>
 
+  
+  <!-- end shop section -->
+
+  <!-- Table section -->
+ <div class="container">
+ <table class="table table-hover">
+  <thead>
+   
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Meter Number</th>
+      <th scope="col">Meter Holder Name</th>
+      <th scope="col">Meter Unit</th>
+      <th scope="col">Meter Status</th>
+      <th scope="col">Meter Updated</th>
+      <th scope="col">Due Amount</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+  @if($count !== 0)
+
+    <tr>
+      <th scope="row">1</th>
+      <td>{{$mymeter->meter_number}}</td>
+      <td>{{$mymeter->user_name}}</td>
+      <td>{{$mymeter->unit}}</td>
+      @if($mymeter['status']=="Booked")
+      <td style="color:red">{{$mymeter->status}} | Owned</td>
+      @endif
+      <td>{{ Carbon::create($mymeter->updated_at)->diffForHumans() }}</td>
+      <td>{{$mymeter->due_amount}}</td>
+      <td><a href="/clear-meter-dues"></a><button class="btn btn-success">Pay Dues</button></td>
+    </tr>
   @else
-   <section class="shop_section layout_padding">
+
+  <tr>
+    <th scope="row">N/A</th>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>N/A</td>
+    <td>N/A</td>
+  </tr>
+@endif
+  </tbody>
+</table>
+
+@if($count == 0)
+
+
+<section class="shop_section layout_padding">
     <div class="container">
       <div class="box">
         <div class="detail-box">
-          <h2>
-         Your Tickets
+          <h2 style="color:red">
+  YOU DONT OWN ANY METERS YET
           </h2>
           <p>
           </p>
@@ -222,153 +275,47 @@ $user = auth()->user();
         <div class="container-fluid">
             <div class="row">
   
-        <div style="margin-bottom: 30px" class="col-md-3">
-        <div class="img-box">
+       
+
             </div>
         </div>
       </div>
     </div>
   </section>
-  @endif
-  <!-- end shop section -->
-
-  <!-- Form section -->
-
-
-@if($count == 0)
-<div class="content">
-<div class="container">
-    	<div class="row">
-	
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb30 text-center">
-                        <!-- <h2>FILL THIS FORM TO REQUEST A NEW CONNECTION</h2><BR> -->
-                        </div>
-                        </div>
-	<div class="row">
-	
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb30">
-                        <div class="tour-booking-form">
-                            <form action="/submitmaintainance" method="POST">
-                              @csrf
-                                <div class="row">
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
-                                        <h4 class="tour-form-title">ALL FIELDS ARE MANDATORY</h4><BR>
-                                  
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt30">
-                                        <!-- <h4 class="tour-form-title">Your Details</h4> -->
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                            
-                                            <input type="text" name="user_id" value="{{$user->id}}" placeholder="" class="form-control" required hidden>
-                                            <input type="text" class="form-control" placeholder="Select on the map below" name="lat" id="lat"><br>
-                                            <input type="text" class="form-control" placeholder="Select on the map below" name="lng" id="lng"> 
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                                        <div class="form-group">
-                                           
-                                            <input type="text" name="user_name" value="{{$user->name}}" placeholder="First and Last Name" class="form-control" required hidden>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-12">
-                                       
-                                    </div>
-                                    </div>
-                                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                                     
-                                 
-                                </div>
-                                <div id="map" style="height:400px; width: 800px;" class="my-3"></div>
-
-                                <script>
-                                    let map;
-                                    function initMap() {
-                                        map = new google.maps.Map(document.getElementById("map"), {
-                                            center: { lat: 27.690174201403295, lng: 85.29114919320999 },
-                                            zoom: 12,
-                                           
-                                            scrollwheel: true,
-                                        });
-                                        const uluru = { lat: 27.690174201403295, lng: 85.29114919320999 };
-                                        let marker = new google.maps.Marker({
-                                            position: uluru,
-                                            map: map,
-                                            draggable: true
-                                        });
-                                        google.maps.event.addListener(marker,'position_changed',
-                                            function (){
-                                                let lat = marker.position.lat()
-                                                let lng = marker.position.lng()
-                                                $('#lat').val(lat)
-                                                $('#lng').val(lng)
-                                            })
-                                        google.maps.event.addListener(map,'click',
-                                        function (event){
-                                            pos = event.latLng
-                                            marker.setPosition(pos)
-                                        })
-                                    }
-                                </script>
-                                <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"
-                                        type="text/javascript"></script>
-                            </div>
-                          </div>
-                          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                            <div class="form-group">
-                               
-                               <br>
-                                <input type="number" name="house_number"  placeholder="Enter House Number" class="form-control" required><br><br>
-                                <input  type="textarea" style="height: 150px;" name="comment" placeholder="Complaint" class="form-control" required><br>
-                                <input  type="date"  name="date" placeholder="Date" class="form-control" required>
-                            </div>
-                          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                              <button type="submit" class="btn btn-primary">send Enquiry</button>
-                          </div>
-                                </form>
-                        </div>
-                        
-                    </div>
-	</div>
   @else
+  <section class="shop_section layout_padding">
     <div class="container">
-      <table class="table table-hover">
-       <thead>
-        
-         <tr>
-           <th scope="col">#</th>
-           <th scope="col">User Name</th>
-           <th scope="col">House Number</th>
-           <th scope="col">Comment</th>
-           <th scope="col">Date For Field Visit</th>
-           <th scope="col">Actions</th>
-         </tr>
-       </thead>
-     
-        
-     @foreach ($data as $item)
-     <tbody>
-     <tr>
-      <th scope="row">1</th>
-      <td>{{$item->user_name}}</td>
-      <td>{{$item->house_number}}</td>
-      <td>{{$item->comment}}</td>
-      <td>{{$item->date}}</td>
-      <td><a href="#"></a><button class="btn btn-danger">Delete</button></td>
-    </tr>
-     </tbody>
- 
+      <div class="box">
+        <div class="detail-box">
+            @if($count != 0)
+          <p>
+            Your Meter Unit For This Month Is : {{$mymeter->unit}} <br>
+            Your Due Amount : {{$mymeter->due_amount}} <br><br><br>
+            Note: Per unit is charged Rs.15
+          </p>
+          @else
+          <p>
+          
+          </p>
+          @endif
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+  
+       
 
-     @endforeach
-    </div>
-    </table>
-    @endif
+            </div>
+        </div>
       </div>
-</div><br><br><br><br>
-</div>
+    </div>
+  </section>
 
+@endif
 
-
+<br><br><br>
+ </div>
+  
+                                                      
   
 
   <!-- info section -->

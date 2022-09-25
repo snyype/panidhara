@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\NewConnection;
 use App\Models\Carousel;
 use App\Models\Testimony;
+use App\Models\Notification;
+use App\Models\NewConnection;
+use Illuminate\Support\Carbon;
 
 class FrontendController extends Controller
 {
@@ -16,16 +18,18 @@ class FrontendController extends Controller
         $carousel = Carousel::all();
         $testimony = Testimony::where('status','=','confirmed')->get();
         $myreqcount = NewConnection::where('user_id',$user_id)->count();
-        return view('Frontend.homepage',compact('myreqcount','carousel','testimony'));
+        $myreq = NewConnection::where('user_id',$user_id)->first();
+        return view('Frontend.homepage',compact('myreqcount','carousel','testimony','myreq'));
     }
 
     public function newConnection()
     {
         $user = Auth::id();
         $carousel = Carousel::all();
-        $data2 = NewConnection::where('user_id',$user)->orwhere('status','=','confirmed')->get();
+        $count = NewConnection::where('user_id',$user)->count();
+        $countconfirmation = NewConnection::where('user_id',$user)->where('status','confirmed')->count();
 
-        return view('Frontend.newconnection',compact('data2','carousel'));
+        return view('Frontend.newconnection',compact('count','carousel','countconfirmation'));
     }
 
        
@@ -58,11 +62,13 @@ class FrontendController extends Controller
 
        
     }
+    
 
     public function dashboard()
     {
         //Read
-    
+        
+       
         
         return view('admin.dashboard');
        
@@ -70,21 +76,45 @@ class FrontendController extends Controller
     public function CheckStatus()
     {
         
-
-    
-        
         return view('admin.dashboard');
        
     }
-    public function thnakyou()
+    public function NotificationActions()
     {
-        
+        $carousel = Carousel::all();
+        $data = Notification::where('user_id', auth()->user()->id)->where('is_opened', false)->orderBy('id', 'DESC')->get();
+       
 
-    
-        
-        return view('thankyou');
+
+        return view('Frontend.notifications',compact('data','carousel'));
        
     }
+  
+    public function NotificationRead()
+    {
+       
+        $data = Notification::where('is_opened', true)->get();
+       
+        if($data){
+
+            $carousel = Carousel::all();
+            Notification::where('created_at','<', Carbon::now()->subMinute(2))->delete();
+
+
+            return view('Frontend.notifications',compact('data','carousel'));
+
+        }
+        else{
+            $data = [];
+            $carousel = Carousel::all();
+            return view('Frontend.notifications',compact('carousel'));
+        }
+
+
+        
+       
+    }
+  
 
 
    

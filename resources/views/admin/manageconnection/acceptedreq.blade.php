@@ -37,6 +37,12 @@
                                     <td>{{$post->citizenship_number}}</td>
                                     <td>{{$post->house_number}}</td>
                                     <td>{{$post->status}}</td>
+                                    <td> <form method="GET" action="/admin/confirmedconnectionrequest/changetopending/{{$post->id}}">
+                                        @csrf
+                                        <td><input class="btn btn-success" type="submit" value="Change Status To Pending"></td>
+                                        </form>
+                                        <td><a class="btn btn-success" href="/admin/viewconnectionmap/{{$post->id}}">View Map</a></td>
+                                    </td>
                              
                                    
                                 </tr>

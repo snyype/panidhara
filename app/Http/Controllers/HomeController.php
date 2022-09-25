@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Carousel;
+use App\Models\Notification;
 
 class HomeController extends Controller
 {
@@ -15,7 +16,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth','verified']);
     }
 
     /**
@@ -115,6 +116,14 @@ class HomeController extends Controller
        
 
         if($data->save()){
+
+            $notification = new Notification();
+            $notification->user_id = auth()->user()->id;
+            $notification->message = "You Updated Your Profile Successfully!";
+            $notification->save();
+
+
+
             return redirect('/user')->with('status', 'User Updated Successfully!');
         }
         else{
