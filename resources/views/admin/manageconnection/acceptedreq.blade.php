@@ -37,7 +37,7 @@
                                     <td>{{$post->citizenship_number}}</td>
                                     <td>{{$post->house_number}}</td>
                                     <td>{{$post->status}}</td>
-                                    <td> <form method="GET" action="/admin/confirmedconnectionrequest/changetopending/{{$post->id}}">
+                                    <td> <form method="GET" action="/admin/confirmedconnectionrequest/changetopending/{{$post->id}}/{{$post->user_id}}">
                                         @csrf
                                         <td><input class="btn btn-success" type="submit" value="Change Status To Pending"></td>
                                         </form>

@@ -110,13 +110,13 @@ Route::group(['prefix'=>'admin','middleware'=>'admin'],function (){
 
     Route::group(['prefix'=>'connectionrequest','middleware'=>'auth'],function (){
         Route::get('/',[newconnectionController::class, 'ShowNewConn']);
-        Route::get('/{id}',[newconnectionController::class, 'UpdatConnStatus']);
+        Route::get('/{id}/{user_id}',[newconnectionController::class, 'UpdatConnStatus']);
 
     });
 
     Route::group(['prefix'=>'confirmedconnectionrequest','middleware'=>'auth'],function (){
         Route::get('/',[newconnectionController::class, 'ShowConfirmedConn']);
-        Route::get('/changetopending/{id}',[newconnectionController::class, 'ChangeToPending']);
+        Route::get('/changetopending/{id}/{user_id}',[newconnectionController::class, 'ChangeToPending']);
         
 
     });

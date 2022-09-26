@@ -232,7 +232,10 @@ $user = auth()->user();
     <th scope="row">1</th>
     <td>{{$item->message}}</td>
     <td>{{ Carbon::create($item->created_at)->diffForHumans() }}</td>
+    @if($item['is_opened']== true)
+    @else
     <td><a class="btn btn-info" href="/notification-read/{{$item->id}}">Mark As Read</a></td>
+    @endif
   </tr>
 @endforeach
   </tbody>

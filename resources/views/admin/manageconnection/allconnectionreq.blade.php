@@ -63,10 +63,8 @@
                                     <td class="cell expand-maximum-on-hover">{{$post->longitude}}</td>
                                     <td>{{$post->status}}</td>
                              
-                                   <td> <form method="GET" action="/admin/connectionrequest/{{$post->id}}">
-                                        @csrf
-                                        <td><input class="btn btn-success" type="submit" value="Confirm This"></td>
-                                        </form>
+                                   <td> 
+                                        <td><a class="btn btn-success" href="/admin/connectionrequest/{{$post->id}}/{{$post->user_id}}">Confirm Request</a></td>
                                         <td><a class="btn btn-success" href="/admin/viewconnectionmap/{{$post->id}}">View Map</a></td>
                                     </td>
 

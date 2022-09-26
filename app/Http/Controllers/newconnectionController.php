@@ -8,6 +8,7 @@ use App\Models\NewConnection;
 use App\Models\Notification;
 use App\Models\Carousel;
 use App\Models\Meter;
+use App\Models\User;
 
 
 
@@ -132,7 +133,7 @@ class newconnectionController extends Controller
         return view('admin.manageconnection.acceptedreq',compact('data'));
     }
 
-    public function UpdatConnStatus($id)
+    public function UpdatConnStatus($id, $user_id)
     {
 
         $data = NewConnection::find($id);
@@ -149,14 +150,21 @@ class newconnectionController extends Controller
             $notification->message = "You (Admin) changed $data->name's connection request status to confirmed";
             $notification->save();
 
+
+            $uid= $user_id;
+            $usernotification = new Notification();
+            $usernotification->user_id = $uid;
+            $usernotification->message = "Admin confirmed your request / Goto myrequest to purchase a meter";
+            $usernotification->save();
+
             return redirect('/admin/confirmedconnectionrequest');
         }
 
     }
 
-    public function ChangeToPending($id)
+    public function ChangeToPending($id, $user_id)
     {
-
+       
         $data = NewConnection::find($id);
         $data->status = 'pending';
 
@@ -169,6 +177,15 @@ class newconnectionController extends Controller
             $notification->user_id = auth()->user()->id;
             $notification->message = "You (Admin) reverted $data->name's connection request Status to Pending";
             $notification->save();
+
+
+            $uid= $user_id;
+            $usernotification = new Notification();
+            $usernotification->user_id = $uid;
+            $usernotification->message = "Admin confirmed your request / Goto myrequest to purchase a meter";
+            $usernotification->save();
+
+
             return redirect('/admin/connectionrequest');
         }
 
