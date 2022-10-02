@@ -29,10 +29,19 @@ class TransactionExport implements FromCollection, WithHeadings, WithColumnWidth
         return [
             'ID',
             'Transaction Id',
+            'Transaction State',
             'Amount',
+            'Fee Amount',
             'Meter Id',
             'Meter Name',
-            'Token'
+            'Payment Type',
+            'Users Name',
+            'Users Phone',
+            'Remarks ',
+            'Refunded ',
+            'Cashback ',
+            'Token',
+            'Transaction Time'
         ];
     }
 
@@ -41,10 +50,19 @@ class TransactionExport implements FromCollection, WithHeadings, WithColumnWidth
         return [
             'A' => 15,
             'B' => 30,            
-            'C' => 15,            
+            'C' => 35,            
             'D' => 15,            
             'E' => 18,            
             'F' => 28,            
+            'G' => 18,            
+            'H' => 28,            
+            'I' => 36,            
+            'J' => 28,            
+            'K' => 28,            
+            'L' => 28,            
+            'M' => 28,            
+            'N' => 28,            
+            'O' => 28,            
         ];
     }
 
@@ -69,7 +87,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithColumnWidth
         return [
             BeforeSheet::class    => function(BeforeSheet $event) {
    
-                $event->sheet->getDelegate()->getStyle('A:F')
+                $event->sheet->getDelegate()->getStyle('A:O')
                                 ->getAlignment()
                                 ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
    
@@ -98,7 +116,7 @@ class TransactionExport implements FromCollection, WithHeadings, WithColumnWidth
                     ],
                 ];
 
-        $event->sheet->getDelegate()->getStyle('A1:F32')->applyFromArray($styleArray);
+        $event->sheet->getDelegate()->getStyle('A1:O1')->applyFromArray($styleArray);
     },
             
 ];

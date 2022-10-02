@@ -268,8 +268,8 @@ $user = auth()->user();
                           success: function(res){
                             console.log('payment successful');
                             console.log(res);
-                            alert('success');
-                            window.location.href = "/mymeter";
+                            alert('Payment successful');
+                     
                            },
                            
                              
@@ -279,6 +279,7 @@ $user = auth()->user();
                   },
                   onError (error) {
                       console.log(error);
+                      alert('Payment error');
                   },
                   onClose () {
                       console.log('widget is closing');

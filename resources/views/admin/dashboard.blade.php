@@ -25,7 +25,7 @@
     <!-- Custom CSS -->
     <link href="{{ URL::asset('css/style.min.css') }} " rel="stylesheet">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
-
+     @livewireStyles
 </head>
 
 <body>
@@ -56,7 +56,7 @@
                         <!-- Logo icon -->
                         <b class="logo-icon">
                             <!-- Dark Logo icon -->
-                            <img style="width: 100%; height:75px" src="{{ URL::asset('images/logo/dashboardlogo.jpg')}}" alt="Panidhara" />
+                            <img style="width: 100%; height:75px" src="{{ URL::asset('images/logo/dashboardlogo.jpg')}}" alt="Panidhara" title="Panidhara" />
                         </b>
                     </a>
                     <!-- ============================================================== -->
@@ -169,7 +169,11 @@
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin/transaction"
                                 aria-expanded="false">
                                 <i class="fa fa-credit-card-front" aria-hidden="true"></i>
-                                <span class="hide-menu">Transaction History</span>
+                                @php
+                                use App\Models\Transaction;
+                                $count = Transaction::all()->count();
+                                @endphp
+                                <span class="hide-menu">Transactions <span>@if(!empty($count)) = {{$count}} @endif</span> </span>
                             </a>
                         </li>
                         <li class="sidebar-item">
@@ -205,7 +209,7 @@
             <div style="height: 60px;" class="page-breadcrumb bg-white">
                 <div class="row align-items-center">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h5 style="padding-top: 13px;" class="page-title">Dashboard</h5>
+                        <h5 style="padding-top: 13px;" class="page-title">Panidhara Admin Dashboard</h5>
                     </div>
                 </div>
                 <!-- /.col-lg-12 -->
@@ -255,6 +259,7 @@
     <script src="plugins/bower_components/chartist/dist/chartist.min.js"></script>
     <script src="plugins/bower_components/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js"></script>
     <script src="js/pages/dashboards/dashboard1.js"></script>
+    @livewireScripts
 </body>
 
 </html>

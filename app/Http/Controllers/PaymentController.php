@@ -39,12 +39,21 @@ class PaymentController extends Controller
         $idx = $data1['idx'];
         $productid = $data1['product_identity'];
         $token = $data1['token'];
+        $transaction_state = $data1['state']['name'];
+        var_dump($transaction_state);
+        $fee_amount = $data1['fee_amount'];
+        $payment_type = $data1['type']['name'];
+        $user_name = $data1['user']['name'];
+        $user_phone = $data1['user']['mobile'];
+        $remarks = $data1['remarks'];
+        $refunded = $data1['refunded'];
+        $cashback = $data1['cashback'];
         $metername = Meter::find($productid);
         
-       
+       var_dump($transaction_state);
 
         $store = Transaction::insert(
-            ['transaction_id' =>$idx, 'amount' =>$amount,'meter_id'=>$productid,'token'=>$token,'meter_name'=>$metername->name]
+            ['transaction_id' =>$idx, 'amount' =>$amount,'meter_id'=>$productid,'token'=>$token,'meter_name'=>$metername->name, 'created_at'=>\Carbon\Carbon::now(),'transaction_state'=>$transaction_state,'fee_amount'=>$fee_amount,'payment_type'=>$payment_type,'user_name'=>$user_name,'user_phone'=>$user_phone,'remarks'=>$remarks,'refunded'=>$refunded,'cashback'=>$cashback ]
         );
     
             
@@ -59,15 +68,20 @@ class PaymentController extends Controller
             $notification->message = "You Purchased $metername->name at price of Rs. $amount . PayType : Khalti";
             $notification->save();
 
-            return $response;
-           
-            return redirect('/mymeter');
-           
-           
-
-//        
+            return $response;       
                 
     }
+
+
+    public function ViewInvoice($id)
+    {
+        $invoice = Transaction::findorfail($id);
+
+        return view('admin.transaction.invoice',compact('invoice'));
+        
+
+    }
+
 
  
    

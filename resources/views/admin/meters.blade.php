@@ -5,14 +5,9 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="col-md-8">
-                <div class="col-md-4">
-                    <form action="/admin/search-meter" method="POST">
-                        @csrf
-                    <input type="text" placeholder="Search By Meter Name And Number" name="query" class="form-control mt-0">
-                    <button class="col-md-4 form-control mt-0">Search</button>
-                   
-                    </form>
-                </div><br>
+                @livewire('meter-search-bar')
+                <br>
+               <br>
             </div>
             <div class="white-box">
 @if (session('status'))
@@ -37,25 +32,44 @@
 @foreach ($meters as $post )
     <tr>
         <td style="width: 50px;text-align:center;">{{$post->id}}</td>
+        @if($post['user_id']==NULL)
         <td style="width: 50px;text-align:center;">{{$post->name}}</td>
+        @else
+        <td style="width: 50px;text-align:center;color:red">{{$post->name}}</td>
+        @endif
+        @if($post['user_id']==NULL)
         <td style="width: 50px;text-align:center;">{{$post->meter_number}}</td>
-        <td style="width: 50px;text-align:center;"> @if($post['user_id']==NULL)Not assigned to any user @else {{$post->user_id}} @endif </td>
-        <td style="width: 50px;text-align:center;"> @if($post['user_id']==NULL)Not assigned to any user @else {{$post->user_name}} @endif</td>
+        @else
+        <td style="width: 50px;text-align:center;color:red">{{$post->meter_number}}</td>
+        @endif
+        <td style="width: 50px;text-align:center;"> @if($post['user_id']==NULL)Id not assigned @else <span style="color:red">{{$post->user_id}}</span> @endif </td>
+        <td style="width: 50px;text-align:center;"> @if($post['user_name']==NULL)Name Not assigned @else <span style="color:red">{{$post->user_name}}</span> @endif</td>
         <td style="width: 50px;text-align:center;">{{$post->unit}}</td>
+        @if($post['due_amount']==NULL)
         <td style="width: 50px;text-align:center;">{{$post->price}}</td>
+        @else
+        <td style="width: 150px;text-align:center;color:red">PAID</td>
+        @endif
         @if($post['status']=="available")
         <td style="width: 50px;text-align:center;color:green">{{$post->status}}</td>
-        @elseif($post['status']="processing")
+        @elseif($post['status']="Booked")
         <td style="width: 50px;text-align:center; color:red">{{$post->status}}</td>
         @endif
         <td style="width: 50px;text-align:center;"><form action="/admin/meter/{{$post->id}}/edit" method="GET"> <input class="btn btn-success" type="submit" value="Update"></form></td>
+        @if($post['status']=="Booked")
+        <td><input class="btn btn-danger" type="submit" value="Delete" disabled title="Booked meter cannot be deleted"></td>
+        @elseif($post['status']=="available")
         <form method="POST" action="/admin/meter/{{$post->id}}">
-        @csrf
-        @method('delete')
-        <td><input class="btn btn-danger" type="submit" value="Delete"></td>
-        </form>
+            @csrf
+            @method('delete')
+            <td><input class="btn btn-danger" type="submit" value="Delete"></td>
+            </form>
+       
+        @endif
     </tr>
+
 @endforeach
+</table>
 
 
 

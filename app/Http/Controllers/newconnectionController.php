@@ -159,6 +159,9 @@ class newconnectionController extends Controller
 
             return redirect('/admin/confirmedconnectionrequest');
         }
+        else{
+            return redirect('/admin/confirmedconnectionrequest');
+        }
 
     }
 

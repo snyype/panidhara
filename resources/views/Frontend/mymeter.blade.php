@@ -239,9 +239,11 @@ $user = auth()->user();
       <td>{{$mymeter->unit}}</td>
       @if($mymeter['status']=="Booked")
       <td style="color:red">{{$mymeter->status}} | Owned</td>
+      @else
+      <td style="color:red">{{$mymeter->status}} | Owned</td>
       @endif
       <td>{{ Carbon::create($mymeter->updated_at)->diffForHumans() }}</td>
-      <td>{{$mymeter->due_amount}}</td>
+      <td>Rs. {{$mymeter->due_amount}}</td>
       <td><a href="/clear-meter-dues"></a><button class="btn btn-success">Pay Dues</button></td>
     </tr>
   @else
@@ -290,7 +292,7 @@ $user = auth()->user();
             @if($count != 0)
           <p>
             Your Meter Unit For This Month Is : {{$mymeter->unit}} <br>
-            Your Due Amount : {{$mymeter->due_amount}} <br><br><br>
+            Your Due Amount : <span style="color:red">Rs. {{$mymeter->due_amount}}</span><br><br><br>
             Note: Per unit is charged Rs.15
           </p>
           @else

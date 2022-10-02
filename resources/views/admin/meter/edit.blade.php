@@ -36,8 +36,11 @@
             <input type="number" class="form-control" id="exampleInputPassword1"  name="price" value="{{$data->price}}">
           </div><br>
           <div class="form-group">
-            <label for="exampleInputPassword1">Status</label>
-            <input type="text" class="form-control" id="exampleInputPassword1"  name="status" value="{{$data->status}}">
+            <select class="form-control" id="exampleInputPassword1" name="status" id="" required>
+              <option value="{{$data->status}}">Change Status from {{$data->status}}</option>
+              <option value="Booked">Booked</option>
+              <option value="available">available</option>
+            </select>
           </div><br>
           <div class="form-group">
             <label for="exampleInputPassword1">Unit</label>

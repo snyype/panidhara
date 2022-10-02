@@ -7,6 +7,16 @@ $user = auth()->user();
 <html>
 
 <head>
+  <style>
+    .css-serial {
+  counter-reset: serial-number;  /* Set the serial number counter to 0 */
+}
+
+.css-serial td:first-child:before {
+  counter-increment: serial-number;  /* Increment the serial number counter */
+  content: counter(serial-number);  /* Display the counter */
+}
+  </style>
   <!-- Basic -->
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -215,10 +225,11 @@ $user = auth()->user();
   <!-- Table section -->
 
   <div class="container">
- <table class="table table-hover">
+ <table class="table table-hover css-serial">
   <thead>
    
     <tr>
+      <th scope="col">SN</th>
       <th scope="col">Meter No</th>
       <th scope="col">Assigned User</th>
       <th scope="col">Status</th>
@@ -231,6 +242,7 @@ $user = auth()->user();
 
   @foreach($meters as $data)
     <tr>
+      <td></td>
       <th scope="row">{{$data->id}}</th>
       @if($data['status']=="available")
       <td>Not Assigned To Any User </td>

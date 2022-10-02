@@ -148,6 +148,7 @@ Route::group(['prefix'=>'admin','middleware'=>'admin'],function (){
     Route::group(['prefix'=>'transaction','middleware'=>'auth'],function (){
         Route::get('/',[MeterController::class, 'ViewTransaction']);
         Route::get('/export-transaction',[MeterController::class, 'ExportTransaction']);
+        Route::get('/view/invoice-details/{id}',[PaymentController::class, 'ViewInvoice']);
         
 
     });

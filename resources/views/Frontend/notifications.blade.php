@@ -7,6 +7,16 @@ $user = auth()->user();
 <html>
 
 <head>
+  <style>
+    .css-serial {
+  counter-reset: serial-number;  /* Set the serial number counter to 0 */
+}
+
+.css-serial td:first-child:before {
+  counter-increment: serial-number;  /* Increment the serial number counter */
+  content: counter(serial-number);  /* Display the counter */
+}
+  </style>
   <!-- Basic -->
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -215,12 +225,12 @@ $user = auth()->user();
 
   <!-- Table section -->
  <div class="container">
- <table class="table table-hover">
+ <table class="table table-hover ">
   <thead>
    
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">Message</th>
+    
+      <th scope="col">Notifications</th>
       <th scope="col">Time</th>
       <th scope="col">Action</th>
 
@@ -229,7 +239,7 @@ $user = auth()->user();
   <tbody>
 @foreach ($data as $item)
 <tr>
-    <th scope="row">1</th>
+    
     <td>{{$item->message}}</td>
     <td>{{ Carbon::create($item->created_at)->diffForHumans() }}</td>
     @if($item['is_opened']== true)
