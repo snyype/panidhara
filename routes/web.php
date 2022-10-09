@@ -39,23 +39,24 @@ Route::namespace('App\Http\Controllers')->group(function ()
     Route::get('/notification-read/{id}','FrontendController@NotificationRead');
 
     Route::get('/','FrontendController@index')->middleware('verified');
-    Route::get('logout', '\App\Http\Controllers\Auth\AuthenticatedSessionController@logout');
-    Route::get('/user','HomeController@UserDetails');
-    Route::post('/update-profile/{id}','HomeController@Update');
-    Route::get('/proceed','newconnectionController@RequestConnection');
-    Route::get('/request-new-connection','FrontendController@newConnection');
-    Route::get('/request-now/{id}','newconnectioncontroller@reqNewConnection');
-    Route::get('/myrequests','FrontendController@myRequests');
-    Route::get('/request-connection','FrontendController@CheckStatus');
-    Route::get('/request-a-new-meter','MeterController@Meters');
-    Route::post('/submit-form','newconnectionController@store');
-    Route::get('/purchase-meter/{id}','MeterController@purchasemeter');
-    Route::get('/maintainance','MeterController@maintanance');
-    Route::get('/mymeter','MeterController@mymeter');
-    Route::post('/submitmaintainance','MeterController@storemaintainance');
-    Route::post('/khalti/payment/verify',[PaymentController::class,'verifyPayment'])->name('khalti.verifyPayment');
-    Route::post('/khalti/payment/store',[PaymentController::class,'storePayment'])->name('khalti.storePayment');
-    Route::get('/request-now/thankyou',[PaymentController::class,'thankyou'])->name('khalti.success');
+    Route::get('logout', '\App\Http\Controllers\Auth\AuthenticatedSessionController@logout')->middleware('verified');
+    Route::get('/user','HomeController@UserDetails')->middleware('verified');
+    Route::post('/update-profile/{id}','HomeController@Update')->middleware('verified');
+    Route::get('/proceed','newconnectionController@RequestConnection')->middleware('verified');
+    Route::get('/request-new-connection','FrontendController@newConnection')->middleware('verified');
+    Route::get('/request-now/{id}','newconnectioncontroller@reqNewConnection')->middleware('verified');
+    Route::get('/myrequests','FrontendController@myRequests')->middleware('verified');
+    Route::get('/request-connection','FrontendController@CheckStatus')->middleware('verified');
+    Route::get('/request-a-new-meter','MeterController@Meters')->middleware('verified');
+    Route::post('/submit-form','newconnectionController@store')->middleware('verified');
+    Route::get('/purchase-meter/{id}','MeterController@purchasemeter')->middleware('verified');
+    Route::get('/maintainance','MeterController@maintanance')->middleware('verified');
+    Route::get('/mymeter','MeterController@mymeter')->middleware('verified');
+    Route::post('/submitmaintainance','MeterController@storemaintainance')->middleware('verified');
+    Route::post('/khalti/payment/verify',[PaymentController::class,'verifyPayment'])->name('khalti.verifyPayment')->middleware('verified');
+    Route::post('/khalti/payment/verify/cleardue',[PaymentController::class,'verifyPaymentForDue'])->name('khalti.verifyPaymentForDue')->middleware('verified');
+    Route::post('/khalti/payment/store',[PaymentController::class,'storePayment'])->name('khalti.storePayment')->middleware('verified');
+    Route::get('/request-now/thankyou',[PaymentController::class,'thankyou'])->name('khalti.success')->middleware('verified');
 
    
      
@@ -65,7 +66,7 @@ Route::namespace('App\Http\Controllers')->group(function ()
 });
 
 
-Route::group(['prefix'=>'admin','middleware'=>'admin'],function (){
+Route::group(['prefix'=>'admin','middleware'=>'admin','middleware'=>'verified'],function (){
     Route::get('/',[FrontendController::class, 'dashboard']);
     Route::group(['prefix'=>'carousel','middleware'=>'auth'],function (){
         
@@ -88,6 +89,7 @@ Route::group(['prefix'=>'admin','middleware'=>'admin'],function (){
 
     Route::group(['prefix'=>'userstable','middleware'=>'auth'],function (){
         Route::get('/',[UserController::class, 'index']);
+        Route::get('/userdetails/{id}',[UserController::class, 'userdetails']);
         Route::get('/create',[UserController::class, 'create']);
         Route::post('/',[UserController::class, 'store']);
         Route::get('/{id}/edit',[UserController::class, 'edit']);

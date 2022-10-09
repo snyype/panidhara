@@ -132,7 +132,8 @@ $user = auth()->user();
                     <a id="#navItemGame" class="dropdown-item" href="/mymeter">My Meter Info</a>
                     <a id="#navItemGame" class="dropdown-item" href="/maintainance">Maintainance</a>
                     <a id="#navItemGame" class="dropdown-item" href="/user">Profile</a>
-                    <a id="#navItemGame" class="dropdown-item" href="/logout">Logout</a>
+                    &nbsp
+                    <a style="border-top:1px solid; background-color:red; color:white " id="#navItemGame" class="dropdown-item" href="/logout">←  Logout</a>
                   </div>
                 </li>
                   @else

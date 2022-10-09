@@ -86,12 +86,6 @@ class FrontendController extends Controller
         $notification->is_opened = true;
         $notification->save();
         // dd(is_string(Carbon::create($notification->updated_at)->diffForHumans()));
-        if ($notification->is_opened) {
-            Notification::where('id', $id)->where('updated_at', '>', Carbon::now()->subMinute(1))->delete();
-        }
-
-        if ($notification->save()) {
-            return redirect('/notifications')->with('success', "Notification opened successfully");
-        }
+        
     }
 }

@@ -45,11 +45,7 @@ class HomeController extends Controller
         $data = User::find($id);
 
         $request->validate([
-            'name' => 'required',
-            'number' => 'required',
-            'citizenship_number' => 'required',
-            'house_number' => 'required',
-            'address' => 'required'
+           
             
 
         ]);

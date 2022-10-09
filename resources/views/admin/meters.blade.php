@@ -7,7 +7,6 @@
             <div class="col-md-8">
                 @livewire('meter-search-bar')
                 <br>
-               <br>
             </div>
             <div class="white-box">
 @if (session('status'))
@@ -15,6 +14,7 @@
         {{ session('status') }}
     </div>
 @endif
+
 
 <table class="table">
 <tr>
@@ -87,4 +87,5 @@
         </div>
     </div>
 </div>
+
 @endsection

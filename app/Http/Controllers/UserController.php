@@ -158,4 +158,11 @@ function update(Request $request, $id)
         
     }
 
+
+    function userdetails($id)
+    {
+      $user =  User::find($id);
+      return view('admin.user.userdetails',compact('user'));
+    }
+
 }

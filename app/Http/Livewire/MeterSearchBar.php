@@ -13,6 +13,12 @@ class MeterSearchBar extends Component
 
     public function mount()
     {
+       $this->reset();
+
+    }
+
+    public function resetData()
+    {
         $this->query = '';
         $this->meters = [];
 

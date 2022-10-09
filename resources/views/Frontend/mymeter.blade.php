@@ -31,6 +31,8 @@ $user = auth()->user();
   <link href="css/style.css" rel="stylesheet" />
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
+
+  <script src="https://khalti.s3.ap-south-1.amazonaws.com/KPG/dist/2020.12.17.0.0.0/khalti-checkout.iffe.js"></script>
 </head>
 
 <body>
@@ -244,8 +246,13 @@ $user = auth()->user();
       @endif
       <td>{{ Carbon::create($mymeter->updated_at)->diffForHumans() }}</td>
       <td>Rs. {{$mymeter->due_amount}}</td>
-      <td><a href="/clear-meter-dues"></a><button class="btn btn-success">Pay Dues</button></td>
+      @if($mymeter['due_amount']==0)
+      <td><button onclick="alert('You have Rs. {{$mymeter->due_amount}} due amount to pay ')" class="btn btn-info">PAID</button></td>
+      @else
+      <td><button id="payment-button" class="btn btn-success">Pay Dues</button></td>
+      @endif
     </tr>
+    
   @else
 
   <tr>
@@ -259,7 +266,9 @@ $user = auth()->user();
   </tr>
 @endif
   </tbody>
+
 </table>
+
 
 @if($count == 0)
 
@@ -413,6 +422,64 @@ $user = auth()->user();
   <script type="text/javascript" src="js/uijs/bootstrap.js"></script>
   <script type="text/javascript" src="js/uijs/custom.js"></script>
 
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+         <script>
+          var config = {
+              // replace the publicKey with yours
+              "publicKey": "{{ config('app.khalti_public_key') }}",
+              "productIdentity": "{{$mymeter->id}}",
+              "productName": "{{$mymeter->name}}",
+              "productUrl": "http://127.0.0.1:8000/request-now/{{$mymeter->id}}",
+              "paymentPreference": [
+                  "KHALTI",
+                  "EBANKING",
+                  "MOBILE_BANKING",
+                  "CONNECT_IPS",
+                  "SCT",
+                  ],
+              "eventHandler": {
+              
+                  onSuccess (payload) {
+                      // hit merchant api for initiating verfication
+                      $.ajax({
+                          type : 'POST',
+                          url : "{{ route('khalti.verifyPaymentForDue') }}",
+                          data: {
+                              token : payload.token,
+                              amount : payload.amount,
+                              "_token" : "{{ csrf_token() }}"
+                          },
+                          success: function(res){
+                            console.log('payment successful');
+                            console.log(res);
+                            alert('Payment successful');
+                            window.location.href = "/mymeter";
+                           },
+                           
+                             
+                          
+                      });
+                      console.log(payload);
+                  },
+                  onError (error) {
+                      console.log(error);
+                      alert('Payment error');
+                  },
+                  onClose () {
+                      console.log('widget is closing');
+                  }
+              }
+          };
+  
+          var checkout = new KhaltiCheckout(config);
+          var btn = document.getElementById("payment-button");
+          btn.onclick = function () {
+              // minimum transaction amount must be 10, i.e 1000 in paisa.
+              checkout.show({amount: 1000});
+          }
+      </script>
 </body>
 
 </html>

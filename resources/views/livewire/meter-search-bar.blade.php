@@ -1,12 +1,14 @@
-@php
-use App\Models\Meter;
 
-$data = Meter::all();
-
-@endphp
 
 <div class="relative ">
-    <input wire:model="query" type="text" placeholder="Search By Meter Name And Number" class="form-control mt-0">
+    <input 
+    wire:model="query"
+    type="text" 
+    placeholder="Search By Meter Name And Number" 
+    class="form-control mt-0"
+    wire:keydown.tab="resetData"
+    wire:keydown.escape="resetData"
+    >
     {{-- <select name="" id="" wire:model="query">
         <option value="">Search Meters..</option>
         @foreach ($data as $item)
@@ -19,11 +21,11 @@ $data = Meter::all();
 
 @if (!empty($meters))
 
-@foreach ($meters as $meter)
+
 <div style="margin-left: 12px" class="container-fluid absolute list-group rounded-t-none">
     <div class="row">
         <div class="white-box">
-
+            @foreach ($meters as $meter)
             <table class="table">
                 <tr>
                     <th style="width: 50px;text-align:center;">ID</th>
@@ -37,6 +39,7 @@ $data = Meter::all();
                     <th colspan="3">Actions</th>
                 </tr>
 
+              
 
                 <tr>
                     <td style="width: 50px;text-align:center;">{{ $meter['id'] }}</td>
